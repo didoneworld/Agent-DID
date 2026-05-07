@@ -8,7 +8,7 @@ Agent DID defines an Agent ID record format and provides a runnable FastAPI refe
 
 ## Current status
 
-Agent DID is stable enough for continued feature development and internal evaluation. The runtime/import/schema blockers around Agent Identity Blueprints were fixed in PR #8 and merged into `main`. Follow-up ILM stabilization work in PR #9 and PR #10 added blueprint CRUD coverage, blueprint lifecycle smoke tests, credential create coverage, schema alignment fixes, and a consent-grant revoke filter fix.
+Agent DID is stable enough for continued feature development and internal evaluation. The runtime/import/schema blockers around Agent Identity Blueprints were fixed in PR #8. Follow-up ILM stabilization work in PR #9, PR #10, and PR #11 added blueprint CRUD coverage, blueprint lifecycle smoke tests, credential create coverage, schema alignment fixes, consent-grant revoke filtering, and valid `AgentRecordWrite` payload tests for blueprint-created agent records.
 
 Current readiness:
 
@@ -18,6 +18,7 @@ Current readiness:
 | Internal evaluation | Ready |
 | Blueprint feature development | Ready |
 | Blueprint CRUD and smoke-test coverage | Started |
+| Valid blueprint-created agent record coverage | Started |
 | Agent ILM implementation | MVP |
 | Production enterprise deployment | Not ready |
 | Security/compliance hardening | In progress |
@@ -45,6 +46,8 @@ Merged stabilization work includes:
 - PR #10: fixed consent-grant revoke filtering by using `revoked_at`
 - PR #10: added blueprint lifecycle smoke tests
 - PR #10: added basic agent endpoint smoke tests
+- PR #11: added valid `AgentRecordWrite` payload coverage for blueprint-created agent records
+- PR #11: added tests for creating, listing, and retrieving blueprint-created agent records
 
 Recent merge commits:
 
@@ -52,6 +55,7 @@ Recent merge commits:
 PR #8  3b54c9d8dc6c63543fc466327697c4cbfa22fd76
 PR #9  4a5e1ea94cd422ecc8a3bbf559552604c282f750
 PR #10 bfeccc30e2dc8f883d12e42c6c7802351aee0e08
+PR #11 e973a35e849c5611eacf9350569b05dbcd6c80bd
 ```
 
 Agent DID is still not a fully hardened enterprise identity platform. Treat it as a serious MVP/reference implementation until the production-readiness checklist below is complete.
@@ -107,7 +111,7 @@ Current capabilities include:
 - built-in web admin console at `/`
 - Docker and Gunicorn production startup support
 - GitHub Actions CI for tests, linting, Docker build, and smoke test
-- blueprint CRUD, credential create, and lifecycle smoke tests
+- blueprint CRUD, credential create, lifecycle smoke, and valid agent record creation tests
 
 ## Repository layout
 
@@ -346,8 +350,10 @@ Current ILM status:
 - Blueprint CRUD tests are in place.
 - Blueprint disable/enable smoke tests are in place.
 - Blueprint credential create coverage is in place.
+- Valid blueprint-created agent record creation/list/get tests are in place.
 - Consent-grant revoke filtering now uses `revoked_at` correctly.
-- Full agent lifecycle transition tests are still needed.
+- Full agent lifecycle state-transition tests are still needed.
+- Lifecycle audit assertion tests are still needed.
 - Durable deprovisioning jobs are still needed before production.
 
 Highlights:
@@ -396,7 +402,7 @@ Known limitations include:
 - Alembic configuration exists, but full versioned migration scripts, rollback testing, and deployment migration runbooks still need to mature
 - webhook delivery exists as an async helper, but durable queues, dead-letter handling, replay, and operational dashboards are still future work
 - secret encryption at rest for identity provider credentials and other sensitive fields still needs to be implemented
-- blueprint endpoint coverage has started, but agent lifecycle transition coverage still needs to be expanded beyond smoke tests
+- blueprint and agent record endpoint coverage has started, but agent lifecycle transition coverage still needs to be expanded beyond smoke/creation tests
 - deprovisioning is modeled, but durable job execution, retries, and dead-letter handling are not production-grade yet
 
 ## Production-readiness checklist
@@ -409,7 +415,8 @@ Before using Agent DID in production, complete and verify:
 - versioned Alembic migrations and rollback tests
 - distributed rate-limit tests with Redis
 - durable background workers for lifecycle, webhook, rotation, and deprovisioning jobs
-- real agent lifecycle transition tests
+- real agent lifecycle state-transition tests
+- lifecycle audit assertion tests
 - blueprint credential, permission, and effective-permission endpoint tests
 - tenant isolation tests
 - security and abuse tests
@@ -423,14 +430,15 @@ Before using Agent DID in production, complete and verify:
 
 Planned work includes:
 
-1. Add real agent lifecycle transition tests using valid `AgentRecordWrite` payloads.
-2. Add durable deprovisioning jobs with persisted steps, retries, idempotency, and audit links.
-3. Harden OIDC and SAML flows with full token validation, signed metadata, logout, and session revocation.
-4. Expand authorization with group mapping, inheritance, policy templates, and an OpenFGA-compatible model.
-5. Mature SCIM, SSF, approvals, audit export, key rotation, and lifecycle automation.
-6. Improve operations with complete Alembic migrations, Redis deployment guidance, workers, metrics, tracing, and deployment manifests.
-7. Expand the admin console for identity providers, sessions, FGA tuples, teams, tenant settings, blueprints, lifecycle actions, and approvals.
-8. Add stronger blueprint permission/effective-permission tests and schema validation tests.
+1. Add real agent lifecycle state-transition tests using valid `AgentRecordWrite` payloads.
+2. Add lifecycle audit assertions for successful and failed transitions.
+3. Add durable deprovisioning jobs with persisted steps, retries, idempotency, and audit links.
+4. Harden OIDC and SAML flows with full token validation, signed metadata, logout, and session revocation.
+5. Expand authorization with group mapping, inheritance, policy templates, and an OpenFGA-compatible model.
+6. Mature SCIM, SSF, approvals, audit export, key rotation, and lifecycle automation.
+7. Improve operations with complete Alembic migrations, Redis deployment guidance, workers, metrics, tracing, and deployment manifests.
+8. Expand the admin console for identity providers, sessions, FGA tuples, teams, tenant settings, blueprints, lifecycle actions, and approvals.
+9. Add stronger blueprint permission/effective-permission tests and schema validation tests.
 
 ## License
 
