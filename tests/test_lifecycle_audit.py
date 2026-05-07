@@ -64,7 +64,7 @@ class TestAuditEvents:
 
 
 class TestDryRun:
-    def test_deprovision_dry_run_no_change(self, client, auth_headers, blueprint):
+    def test_deprovision_endpoint_smoke(self, client, auth_headers, blueprint):
         get_resp = client.get(f"/v1/blueprints/{blueprint}", headers=auth_headers)
         original = get_resp.json()
         
