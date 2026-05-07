@@ -137,14 +137,14 @@ def _blueprint_response(db: Session, blueprint: AgentIdentityBlueprint) -> Agent
         verified_publisher=blueprint.verified_publisher,
         publisher_domain=blueprint.publisher_domain,
         sign_in_audience=blueprint.sign_in_audience,
-        identifier_uris_json=blueprint.identifier_uris_json or [],
-        app_roles_json=blueprint.app_roles_json or [],
-        optional_claims_json=blueprint.optional_claims_json or {},
-        group_membership_claims_json=blueprint.group_membership_claims_json or [],
+        identifier_uris=blueprint.identifier_uris_json or [],
+        app_roles=blueprint.identifier_uris_json or [],
+        optional_claims=blueprint.optional_claims_json or {},
+        group_membership_claims=blueprint.group_membership_claims_json or [],
         token_encryption_key_id=blueprint.token_encryption_key_id,
-        certification_json=blueprint.certification_json or {},
-        info_urls_json=blueprint.info_urls_json or {},
-        tags_json=blueprint.tags_json or [],
+        certification=blueprint.certification_json or {},
+        info_urls=blueprint.info_urls_json or {},
+        tags=blueprint.tags_json or [],
         status=blueprint.status,
         credentials=credentials,
         permissions={"required_resource_access": required_resource_access, "inheritable_permissions": inheritable_permissions, "consent_grants": consent_grants, "direct_agent_grants": [], "denied_permissions": []},
@@ -836,7 +836,7 @@ def create_app(
             except Exception:
                 detail = str(exc)
             raise HTTPException(status_code=422, detail=detail) from exc
-        return _transition_response("agent", record_id, result)
+        return _make_lifecycle_response("agent", record_id, result)
 
     @app.delete("/v1/agent-records/{record_id}", response_model=LifecycleTransitionResponse)
     def delete_agent_record_lifecycle(
@@ -848,9 +848,9 @@ def create_app(
             _record, result = service.transition_agent_lifecycle(db, auth.organization_id, auth.actor_label, record_id, "delete", LifecycleRequestData(reason="delete requested", force=True))
         except KeyError:
             raise HTTPException(status_code=404, detail="agent record not found")
-        return _transition_response("agent", record_id, result)
+        return _make_lifecycle_response("agent", record_id, result)
 
-    def _blueprint_response(blueprint: AgentIdentityBlueprint) -> BlueprintLifecycleResponse:
+    def _make_lifecycle_response(blueprint: AgentIdentityBlueprint) -> BlueprintLifecycleResponse:
         return BlueprintLifecycleResponse(id=blueprint.id, organization_id=blueprint.organization_id, lifecycle_state=blueprint.lifecycle_state, metadata=blueprint.metadata_json, updated_at=blueprint.updated_at)
 
     def _get_or_create_blueprint(db: Session, organization_id: str, blueprint_id: str) -> AgentIdentityBlueprint:
@@ -862,7 +862,7 @@ def create_app(
 
     @app.get("/v1/blueprints/{blueprint_id}", response_model=BlueprintLifecycleResponse)
     def get_blueprint(blueprint_id: str, db: Annotated[Session, Depends(get_db)], auth=Depends(require_role("admin", "writer", "reader"))):
-        return _blueprint_response(_get_or_create_blueprint(db, auth.organization_id, blueprint_id))
+        return _make_lifecycle_response(_get_or_create_blueprint(db, auth.organization_id, blueprint_id))
 
     @app.post("/v1/blueprints/{blueprint_id}/activate", response_model=LifecycleTransitionResponse)
     @app.post("/v1/blueprints/{blueprint_id}/disable", response_model=LifecycleTransitionResponse)

@@ -292,16 +292,22 @@ class AgentIdentityBlueprintWrite(BaseModel):
     verified_publisher: bool = False
     publisher_domain: str | None = None
     sign_in_audience: str = "single_tenant"
-    identifier_uris_json: list = Field(default_factory=list)
-    app_roles_json: list = Field(default_factory=list)
-    optional_claims_json: dict = Field(default_factory=dict)
-    group_membership_claims_json: list = Field(default_factory=list)
+    # Accept both _json and non-_json field names
+    identifier_uris: list = Field(default_factory=list, validation_alias="identifier_uris_json")
+    app_roles: list = Field(default_factory=list, validation_alias="app_roles_json")
+    optional_claims: dict = Field(default_factory=dict, validation_alias="optional_claims_json")
+    group_membership_claims: list = Field(default_factory=list, validation_alias="group_membership_claims_json")
     token_encryption_key_id: str | None = None
-    certification_json: dict = Field(default_factory=dict)
-    info_urls_json: dict = Field(default_factory=dict)
-    tags_json: list = Field(default_factory=list)
+    certification: dict = Field(default_factory=dict, validation_alias="certification_json")
+    info_urls: dict = Field(default_factory=dict, validation_alias="info_urls_json")
+    tags: list = Field(default_factory=list, validation_alias="tags_json")
     status: str = "active"
-    extension_fields_json: dict = Field(default_factory=dict)
+    extension_fields: dict = Field(default_factory=dict, validation_alias="extension_fields_json")
+    # Additional fields for permissions and ownership
+    permissions: dict = Field(default_factory=dict)
+    owners: list = Field(default_factory=list)
+    sponsors: list = Field(default_factory=list)
+    credentials: list = Field(default_factory=list)
 
 
 class AgentIdentityBlueprintPatch(BaseModel):
@@ -313,15 +319,16 @@ class AgentIdentityBlueprintPatch(BaseModel):
     verified_publisher: bool | None = None
     publisher_domain: str | None = None
     sign_in_audience: str | None = None
-    identifier_uris_json: list | None = None
-    app_roles_json: list | None = None
-    optional_claims_json: dict | None = None
-    group_membership_claims_json: list | None = None
+    # Accept both _json and non-_json field names
+    identifier_uris: list | None = Field(default=None, validation_alias="identifier_uris_json")
+    app_roles: list | None = Field(default=None, validation_alias="app_roles_json")
+    optional_claims: dict | None = Field(default=None, validation_alias="optional_claims_json")
+    group_membership_claims: list | None = Field(default=None, validation_alias="group_membership_claims_json")
     token_encryption_key_id: str | None = None
-    certification_json: dict | None = None
-    info_urls_json: dict | None = None
-    tags_json: list | None = None
-    extension_fields_json: dict | None = None
+    certification: dict | None = Field(default=None, validation_alias="certification_json")
+    info_urls: dict | None = Field(default=None, validation_alias="info_urls_json")
+    tags: list | None = Field(default=None, validation_alias="tags_json")
+    extension_fields: dict | None = Field(default=None, validation_alias="extension_fields_json")
 
 
 class AgentIdentityBlueprintResponse(BaseModel):
@@ -334,16 +341,16 @@ class AgentIdentityBlueprintResponse(BaseModel):
     verified_publisher: bool
     publisher_domain: str | None
     sign_in_audience: str
-    identifier_uris_json: list
-    app_roles_json: list
-    optional_claims_json: dict
-    group_membership_claims_json: list
+    identifier_uris: list
+    app_roles: list
+    optional_claims: dict
+    group_membership_claims: list
     token_encryption_key_id: str | None
-    certification_json: dict
-    info_urls_json: dict
-    tags_json: list
+    certification: dict
+    info_urls: dict
+    tags: list
     status: str
-    extension_fields_json: dict
+    extension_fields: dict = Field(default_factory=dict, validation_alias="extension_fields_json")
     created_at: datetime
     updated_at: datetime
 
