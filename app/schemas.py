@@ -377,12 +377,17 @@ class BlueprintPrincipalResponse(BaseModel):
 
 
 class BlueprintCredentialWrite(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
 
     credential_id: str
     credential_type: str
     display_name: str
-    metadata_json: dict = Field(default_factory=dict)
+    # Accept both _json and non-_json field names
+    metadata: dict = Field(default_factory=dict, validation_alias="metadata_json")
+    expires_at: datetime | None = None
+    rotation_status: str = "active"
+    last_rotated_at: datetime | None = None
+    development_only: bool = False
     expires_at: datetime | None = None
     development_only: bool = False
 
@@ -394,14 +399,14 @@ class BlueprintCredentialResponse(BaseModel):
     credential_id: str
     credential_type: str
     display_name: str
-    metadata_json: dict
-    expires_at: datetime | None
-    rotation_status: str
-    last_rotated_at: datetime | None
-    development_only: bool
-    production_warning: str | None
+    metadata: dict = Field(default_factory=dict, validation_alias="metadata_json")
+    expires_at: datetime | None = None
+    rotation_status: str = "active"
+    last_rotated_at: datetime | None = None
+    development_only: bool = False
+    production_warning: str | None = None
     created_at: datetime
-    deleted_at: datetime | None
+    deleted_at: datetime | None = None
 
 
 class BlueprintPolicyActionResponse(BaseModel):
