@@ -67,6 +67,7 @@ from app.schemas import (
     SessionAuthResponse,
     ServiceInfoResponse,
     EffectivePermissionsResponse,
+    PermissionGrant,
 )
 from app.services import AuthorizationError, BootstrapConflictError, ProtocolValidationError, SaaSService
 
@@ -123,7 +124,7 @@ def _blueprint_response(db: Session, blueprint: AgentIdentityBlueprint) -> Agent
             "last_rotated_at": item.last_rotated_at,
             "development_only": item.development_only,
         }
-        for item in blueprint.credentials
+        for item in db.query(BlueprintCredential).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
         if item.deleted_at is None
     ]
     return AgentIdentityBlueprintResponse(
