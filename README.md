@@ -1,5 +1,7 @@
 # Agent DID
 
+> **Status:** Stable MVP / reference implementation. Ready for continued development and internal evaluation. **Not production ready yet.**
+
 Open source, vendor-agnostic agent identity and access management control plane built around OpenID Connect, SAML, SCIM, Shared Signals, W3C Decentralized Identifiers, and Agent Identity Blueprints.
 
 Agent DID defines an Agent ID record format and provides a runnable FastAPI reference implementation for managing agent identities, governance metadata, authorization, lifecycle operations, blueprint-backed identity fleets, and enterprise identity integrations.
@@ -7,6 +9,18 @@ Agent DID defines an Agent ID record format and provides a runnable FastAPI refe
 ## Current status
 
 Agent DID is now stable enough for continued feature development and internal evaluation. The runtime/import/schema blockers around Agent Identity Blueprints were fixed in PR #8 and merged into `main`.
+
+Current readiness:
+
+| Area | Status |
+|---|---|
+| Local development | Ready |
+| Internal evaluation | Ready |
+| Blueprint feature development | Ready |
+| Production enterprise deployment | Not ready |
+| Security/compliance hardening | In progress |
+| Production observability | Not complete |
+| Full OIDC/SAML hardening | Not complete |
 
 Merged stabilization work includes:
 
