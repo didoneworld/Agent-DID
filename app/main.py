@@ -13,7 +13,17 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.database import get_db, init_database
 
-from app.db_models import AgentRecord, AgentIdentityBlueprint
+from app.db_models import (
+    AgentRecord,
+    AgentIdentityBlueprint,
+    BlueprintConsentGrant,
+    BlueprintCredential,
+    BlueprintInheritablePermission,
+    BlueprintOwner,
+    BlueprintPrincipal,
+    BlueprintRequiredResourceAccess,
+    BlueprintSponsor,
+)
 
 from app.migrations import migrate_database
 from app.runtime import InMemoryRateLimiter, build_request_context, log_request, rate_limit_response
@@ -56,6 +66,7 @@ from app.schemas import (
     SamlAssertionRequest,
     SessionAuthResponse,
     ServiceInfoResponse,
+    EffectivePermissionsResponse,
 )
 from app.services import AuthorizationError, BootstrapConflictError, ProtocolValidationError, SaaSService
 
