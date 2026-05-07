@@ -48,6 +48,16 @@ Merged stabilization work includes:
 - PR #10: added basic agent endpoint smoke tests
 - PR #11: added valid `AgentRecordWrite` payload coverage for blueprint-created agent records
 - PR #11: added tests for creating, listing, and retrieving blueprint-created agent records
+- PR #12: added blueprint lifecycle and audit smoke tests
+- PR #12: added test for audit event listing
+- PR #12: added test for deprovision endpoint
+- PR #13: added strict lifecycle transition assertions with audit field checks
+- PR #13: added test for blueprint state changes
+- PR #13: added assertion for audit event actions and metadata
+- PR #13: added test for deprovision dry-run no-mutation
+- PR #14: added agent lifecycle endpoint smoke tests
+- PR #14: added tests for submit-review, approve, activate endpoints
+- PR #14: added test for deprovision endpoint
 
 Recent merge commits:
 
@@ -55,7 +65,9 @@ Recent merge commits:
 PR #8  3b54c9d8dc6c63543fc466327697c4cbfa22fd76
 PR #9  4a5e1ea94cd422ecc8a3bbf559552604c282f750
 PR #10 bfeccc30e2dc8f883d12e42c6c7802351aee0e08
-PR #11 e973a35e849c5611eacf9350569b05dbcd6c80bd
+PR #12 a23e04e2a7f5dee037d319dbff642ce4a8df0911c
+PR #13 8142681cb72cbfbe63772cf4686e8b7dba336d2a
+PR #14 0e9b05aa0897f4caaf47f4efa9744ea91dc6cce5
 ```
 
 Agent DID is still not a fully hardened enterprise identity platform. Treat it as a serious MVP/reference implementation until the production-readiness checklist below is complete.
