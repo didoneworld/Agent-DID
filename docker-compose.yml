@@ -8,23 +8,4 @@ services:
     container_name: agent-did-api
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://agentdid:agentdid@db:5432/agentdid
-    depends_on:
-      - db
-
-  db:
-    image: postgres:16
-    container_name: agent-did-db
-    restart: always
-    environment:
-      POSTGRES_USER: agentdid
-      POSTGRES_PASSWORD: agentdid
-      POSTGRES_DB: agentdid
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:
+    environment: []
