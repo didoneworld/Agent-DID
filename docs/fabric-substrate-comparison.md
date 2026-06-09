@@ -128,6 +128,38 @@ attack surface** (§5.2):
 This is the **agent-clear** profile: a self-contained agent whose memory is
 local, trusted, real-time, and resolvable — drift-resistant by construction.
 
+## Platform Benchmark score
+
+Because the **platform is ours** and the **contract is ours**
+(`fabric-substrate.md` §1.1), engines are scored by **contract conformance**, not
+by lock-in. Ten contract axes, each scored ✅ = 2 · ◐ = 1 · ✗ = 0, summed to a
+**Platform Benchmark score / 20** (→ %).
+
+Axes: (1) graph-native · (2) schemaless-not-structureless · (3) multi-model +
+vector · (4) live stream · (5) re-stream/replay · (6) ACID · (7) edge/embed/
+air-gap · (8) serverless/pluggable storage · (9) feature-not-provider
+(embeddable, open, runtime-not-fused) · (10) multi-tenant/federation.
+
+| Engine | Platform Benchmark score | Notes |
+|---|---|---|
+| **SurrealDB** | **20/20 (100%)** | reference fit (contract shaped with it in mind — see caveat) |
+| **ArangoDB** | 13/20 (65%) | multi-model + native graph; server-centric |
+| **Neo4j** | 12/20 (60%) | best graph algorithms; graph-mostly, JVM-embedded |
+| **Postgres** | 11/20 (55%) | gold-standard ACID, open; graph/vector via extensions |
+| **SingleStore** | 11/20 (55%) | native vector + HTAP; server/cloud, not edge |
+| **OceanBase** | 11/20 (55%) | distributed ACID + multi-tenant; heavy server |
+| **ClickHouse** | 9/20 (45%) | OLAP champion (chDB embeds); weak graph/transaction |
+| **SpacetimeDB** | 9/20 (45%) | best real-time; fuses runtime (provider-shaped) |
+| **Convex** | 9/20 (45%) | reactive DX; hosted, fuses runtime |
+| *Apache Spark* | *n/a* | compute engine, not a store (offline resolution layer) |
+
+**Caveat (honest):** SurrealDB scores 100% partly because the contract was
+*derived with it in view*; the score measures **conformance to our contract**, not
+absolute engine quality. It is still decision-useful: it ranks engines by *how
+much of the platform they can host natively* vs. how much we'd have to build atop
+them. A provider that fuses runtime (SpacetimeDB, Convex) is penalized on axis 9
+precisely because it would try to **own the contract** instead of hosting it.
+
 ## Additional substrates: SingleStore, ClickHouse, OceanBase
 
 Three distributed SQL engines worth weighing. **None is graph-native or

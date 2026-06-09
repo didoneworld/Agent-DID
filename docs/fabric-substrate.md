@@ -51,6 +51,14 @@ The architectural stance, stated plainly:
   a capability we compose, like a library; we own the data, uptime, and lifecycle.
   A *provider* (hosted, owning, sticky — e.g. SpacetimeDB, Convex) would invert
   that and own us. We use the store strictly as a feature.
+- **The platform is ours; SurrealDB is a feature set and building base.** The
+  *platform* — the box model, the contract, governance, scoring, and orchestration
+  (the OS-for-work, §5/§9.3) — is ours. SurrealDB is a **building base** within it,
+  and we consume its capabilities (graph traversal, live queries, change feeds,
+  functions, embedded engine) as a **feature set**. Its engine is a runtime
+  *feature* we use; **the platform's runtime is ours**, not the store's. (This is
+  the precise sense of "backend, not runtime": the store's runtime is a feature;
+  the platform runtime is sovereign.)
 - **Therefore vendor-neutrality is structural, not aspirational.** Any engine that
   satisfies the contract is interchangeable (Neo4j, ArangoDB, Postgres, SingleStore
   …). The contract is the moat; the engine is swappable.
