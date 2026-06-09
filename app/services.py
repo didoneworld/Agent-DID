@@ -578,13 +578,28 @@ class SaaSService(LifecycleServiceMixin):
         db.commit(); db.refresh(blueprint); return blueprint
 
     def set_blueprint_status(self, db: Session, organization_id: str, actor_label: str, blueprint_id: str, enabled: bool) -> tuple[AgentIdentityBlueprint | None, list[str]]:
+        from .lifecycle import set_agent_lifecycle_state
         blueprint = self.get_blueprint(db, organization_id, blueprint_id)
         if blueprint is None: return None, []
         blueprint.status = "active" if enabled else "disabled"; blueprint.updated_at = utc_now()
         affected=[]
         if not enabled:
-            for record in self.list_records_by_blueprint(db, organization_id, blueprint_id):
-                record.status = "disabled"; record.record_json.setdefault("agent", {})["status"] = "disabled"; record.updated_at = utc_now(); affected.append(record.id)
+            # cascade-suspend every agent record bound to this blueprint, whether by
+            # the hard blueprint_id column or a soft record_json reference
+            # (lifecycle / extensions.lifecycle / extensions.blueprint).
+            for record in self.list_records(db, organization_id):
+                rj = record.record_json or {}
+                refs = {
+                    record.blueprint_id,
+                    rj.get("blueprint_id"),
+                    (rj.get("agent") or {}).get("blueprint_id"),
+                    (rj.get("lifecycle") or {}).get("blueprint_id"),
+                    ((rj.get("extensions") or {}).get("lifecycle") or {}).get("blueprint_id"),
+                    ((rj.get("extensions") or {}).get("blueprint") or {}).get("blueprint_id"),
+                }
+                if blueprint_id in refs or blueprint.id in refs:
+                    set_agent_lifecycle_state(record, "suspended")
+                    affected.append(record.id)
         self._audit(db, organization_id=organization_id, actor_label=actor_label, action="blueprint_enabled" if enabled else "blueprint_disabled", metadata={"blueprint_id": blueprint_id, "affected_agent_record_ids": affected})
         db.commit(); db.refresh(blueprint); return blueprint, affected
 

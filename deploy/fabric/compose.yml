@@ -1,0 +1,24 @@
+# Run the fabric core container, optionally alongside a SurrealDB instance.
+#   docker compose -f deploy/fabric/compose.yml up --build
+#
+# `fabric` runs the Rust core + the deterministic benchmark suite. To exercise the
+# SurrealQL against the live engine, load it into the `surrealdb` service:
+#   docker compose -f deploy/fabric/compose.yml run --rm surrealdb \
+#     import --conn http://surrealdb:8000 --user root --pass root \
+#     --ns fabric --db sandbox /import/schema.surql
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    command: start --user root --pass root --bind 0.0.0.0:8000 memory
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../experiments/fabric:/import:ro
+
+  fabric:
+    build:
+      context: ../..
+      dockerfile: deploy/fabric/Dockerfile
+    image: fabric-core:local
+    depends_on:
+      - surrealdb

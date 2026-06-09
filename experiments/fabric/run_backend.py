@@ -89,7 +89,11 @@ def run_with_docker() -> dict | None:
         if not _wait_ready(time.time() + 30):
             print("[backend] container did not become ready")
             return None
-        return _load_and_resolve()
+        try:
+            return _load_and_resolve()
+        except Exception as e:  # noqa: BLE001 - experimental backend: degrade to skip
+            print(f"[backend] surrealdb load/resolve failed: {e}")
+            return None
     finally:
         subprocess.run(["docker", "stop", cid], stdout=subprocess.DEVNULL,
                        stderr=subprocess.DEVNULL)
@@ -107,7 +111,11 @@ def run_with_binary() -> dict | None:
         if not _wait_ready(time.time() + 20):
             print("[backend] surreal did not become ready")
             return None
-        return _load_and_resolve()
+        try:
+            return _load_and_resolve()
+        except Exception as e:  # noqa: BLE001 - experimental backend: degrade to skip
+            print(f"[backend] surreal load/resolve failed: {e}")
+            return None
     finally:
         proc.terminate()
 
