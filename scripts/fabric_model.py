@@ -29,6 +29,12 @@ class Box:
     ctx: str | None = None    # id of the context/box it is placed in
     payload: dict = field(default_factory=dict)
     meta: bool = False        # part of the model (metamodel) vs data
+    valid_from: float | None = None  # bi-temporal validity (Graphiti/Zep style)
+    valid_to: float | None = None    # None = open / always valid
+
+    def valid_at(self, t: float) -> bool:
+        return ((self.valid_from is None or self.valid_from <= t)
+                and (self.valid_to is None or t < self.valid_to))
 
 
 class Graph:
@@ -37,14 +43,19 @@ class Graph:
         self.edges: list[tuple[str, str, str]] = []  # (src, rel_id, dst)
         self._subs: list[tuple] = []  # (predicate, callback) — real-time streams
 
-    def box(self, id, kind, ctx=None, payload=None, meta=False) -> Box:
-        b = Box(id, kind, ctx, payload or {}, meta)
+    def box(self, id, kind, ctx=None, payload=None, meta=False,
+            valid_from=None, valid_to=None) -> Box:
+        b = Box(id, kind, ctx, payload or {}, meta, valid_from, valid_to)
         self.boxes[id] = b
         self._emit("create", b)
         return b
 
     def relate(self, src, rel, dst) -> None:
         self.edges.append((src, rel, dst))
+
+    def as_of(self, t: float) -> set:
+        """Bi-temporal query: boxes valid at time t (what was believed at t)."""
+        return {i for i, b in self.boxes.items() if b.valid_at(t)}
 
     # ---- real-time box streaming (live query / change feed, §6.1) ----------
     def subscribe(self, predicate, callback) -> None:
@@ -283,6 +294,17 @@ def main() -> int:
     g.box("tool:audit", kind="tool", ctx="ctx:onboarding",
           payload={"api": "audit"})  # filtered out (kind=tool)
     g.promote("ing:token", ratified=True)  # update streams too
+
+    # ---- bi-temporal validity (Graphiti/Zep style: valid_at/invalid_at) --
+    print("\nBi-temporal memory (what was true at time T):")
+    g.box("fact:budget-owner@alice", kind="ingredient", ctx="ctx:onboarding",
+          payload={"owner": "alice"}, valid_from=0, valid_to=10)
+    g.box("fact:budget-owner@bob", kind="ingredient", ctx="ctx:onboarding",
+          payload={"owner": "bob"}, valid_from=10)
+    for t in (5, 15):
+        owners = [g.boxes[i].payload["owner"]
+                  for i in g.as_of(t) if i.startswith("fact:budget-owner")]
+        print(f"  as_of t={t:<3} budget owner -> {owners}")
     return 0 if ok else 1
 
 
