@@ -86,6 +86,18 @@ An **agent** is a box of `kind:agent` (DID-anchored) — *identity is a data poi
 field — *value is a data point* (§10.2), and because it links to `context`, it is
 always **value-in-context** (§10.4).
 
+### 2.45. Schemaless payload, multimedia, and concurrency
+
+- **Schemaless payload, multimedia file types.** The `payload` is schemaless
+  (§7.6.4), so a box holds **any** content: text, JSON, or **multimedia** — images,
+  audio, video, PDFs — stored as blob references plus **vector embeddings** for
+  RAG/memory (§4). The envelope stays schemafull (never structureless); the
+  contents are free. One box type carries every modality.
+- **Concurrency.** Many constructions proceed at once (multi-threaded mode,
+  §9.1). Writes are **ACID**; box updates use optimistic concurrency; and because
+  resolution is per-shard and per-context, **resolution parallelizes** without
+  global locks (stateless control plane, `design-principles.md` §2).
+
 ### 2.5. Validity = the resolver, in the store
 
 A box is **valid (real + stable)** under the same criteria as

@@ -125,6 +125,79 @@ attack surface** (§5.2):
 This is the **agent-clear** profile: a self-contained agent whose memory is
 local, trusted, real-time, and resolvable — drift-resistant by construction.
 
+## Additional substrates: SingleStore, ClickHouse, OceanBase
+
+Three distributed SQL engines worth weighing. **None is graph-native or
+edge-embeddable** (all are server/cluster), so none fits the box-graph + air-gapped
+core as well as SurrealDB — but each is a strong **complement** for one layer
+(polyglot persistence, §6.8).
+
+| Axis | **SingleStore** | **ClickHouse** | **OceanBase** |
+|---|---|---|---|
+| Model | distributed HTAP SQL (row+column) | columnar OLAP | distributed HTAP SQL (MySQL/Oracle-compat) |
+| Graph-native (boxes/edges) | ◐ relational | ✗ | ◐ relational |
+| Vector / RAG | ✅ ANN (≈800–1000× vs KNN) | ◐ approximate vector | ◐ emerging vector |
+| Real-time | ✅ HTAP, lock-free ingest (M events/s) | ✅ very fast inserts/reads (append) | ✅ HTAP |
+| ACID / transactions | ✅ | ◐ limited | ✅✅ distributed (Paxos), extreme scale |
+| Analytics / cost rollups | ✅ TPC-H/DS-class | ✅✅ best-in-class OLAP | ✅ |
+| Edge / embedded / air-gap | ✗ server / cloud | ✗ server | ✗ server |
+| Backend ≠ runtime | ✅ backend | ✅ backend | ✅ backend |
+
+- **SingleStore** — best **HTAP + native vector** at cloud scale; excellent for the
+  **RAG/memory + real-time analytics** layer where graph traversal isn't the hot
+  path. ([SingleStore-V](https://www.singlestore.com/resources/research-paper-singlestore-v-an-integrated-vector-database-system-in-singlestore/),
+  [agentic AI architecture](https://www.singlestore.com/blog/real-time-data-convergence-architecture-agentic-ai-hitech/))
+- **ClickHouse** — best-in-class **OLAP**; ideal for the fabric's **measurability/
+  cost/audit** layer — change-feed archives, telemetry, cost rollups (§6.3, FinOps)
+  — not the transactional box store.
+- **OceanBase** — **distributed ACID at extreme scale** (Paxos, HA); a durable
+  transactional backbone for very large federations where SQL maturity and
+  cross-shard transactions dominate.
+
+**Net:** keep **SurrealDB as the primary box-graph backend** (graph + multi-model +
+edge/air-gap). Complement with **SingleStore/ClickHouse** for vector-and-analytics
+at scale and **OceanBase** for massive ACID — a polyglot-persistence story that
+leaves the box model unchanged (§6.4): only the engine behind a context/shard
+differs.
+
+## Graph-native and compute engines: Neo4j, ArangoDB, Spark, Convex
+
+These sit closest to the box-graph core — two are graph-native (direct SurrealDB
+alternatives), one is a compute engine, one fuses runtime.
+
+| Axis | **Neo4j** | **ArangoDB** | **Apache Spark** | **Convex** |
+|---|---|---|---|---|
+| Model | native graph | multi-model (doc+graph+kv) | distributed **compute** (not a store) | reactive backend (doc) |
+| Graph-native | ✅✅ Cypher + GDS algorithms | ✅ AQL traversals | ◐ GraphX / GraphFrames | ✗ |
+| Multi-model / vector | ◐ + vector index | ✅ + vector | n/a (processes any) | ◐ |
+| Real-time | ◐ change data capture | ◐ | ✅ Structured Streaming (batch+stream) | ✅✅ reactive subscriptions |
+| ACID | ✅ | ✅ | n/a | ✅ |
+| Edge / embedded / air-gap | ◐ embedded (JVM) | ◐ | ✗ cluster | ✗ hosted |
+| Backend ≠ runtime | ✅ backend | ✅ backend | ✅ compute/runtime layer | ✗ **fuses** runtime (TS funcs) |
+
+- **Neo4j** — best-in-class **graph algorithms** (GDS) and Cypher; ideal for the
+  **trust/provenance/lineage** graph and `derives`-edge reasoning. A credible swap
+  for the box-graph backend; chosen against only because it is graph-mostly
+  (weaker multi-model/vector) and server-centric.
+- **ArangoDB** — the closest **multi-model + native graph** alternative to
+  SurrealDB; either could host the box graph. SurrealDB is preferred for
+  edge/WASM, live queries, and pluggable storage, but ArangoDB is a near-peer.
+- **Apache Spark** — not a store but the **distributed compute/runtime** layer:
+  offline resolution of huge graphs (GraphFrames), federation ETL, training, and
+  batch analytics over the box graph at 8e9 scale (§9.3). Complements the backend,
+  it doesn't replace it.
+- **Convex** — a **reactive backend** (TypeScript functions + reactive DB) that,
+  like SpacetimeDB, **fuses backend and runtime**: great real-time/serverless DX,
+  but weak graph/vector, hosted (no air-gap), and conflicts with the stateless
+  control plane / backend≠runtime decision (§9.3).
+
+**Net (all substrates):** the box model is **engine-neutral** (§6.4). SurrealDB is
+the primary backend (graph + multi-model + edge/air-gap); Neo4j/ArangoDB are
+credible graph-native swaps; SingleStore/ClickHouse/OceanBase serve the
+vector-analytics/ACID-at-scale layers; Spark is the offline compute engine;
+SpacetimeDB/Convex are deliberate non-fits (they fuse runtime). *One model, many
+engines — chosen per context/shard.*
+
 ## Security risk vs blockchain / The Graph
 
 A different trust model is worth contrasting: **blockchain** (global consensus +

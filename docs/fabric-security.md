@@ -38,6 +38,28 @@ boxes** (the AI registry, `fabric-use-cases.md` §3):
 - **Air-gapped / local LLM** removes external fetch entirely
   (`fabric-substrate-comparison.md`).
 
+## Constraint enforcement: OpenFGA (pure, relationship-based)
+
+The constraint layer (§7) and externalized policy (`design-principles.md` §6) are
+enforced with **OpenFGA** — open-source, Zanzibar-style **relationship-based access
+control (ReBAC)** — because authorization in the fabric is already a **graph
+question**.
+
+- **Authorization = reachability.** "May agent A perform construction C in context
+  X?" is "does a *permitted* relationship path exist?" OpenFGA tuples map 1:1 onto
+  the fabric's relations (`fills`, `contains`, `commands`, `performs`,
+  `instance_of`); a check is node resolution restricted to permitted edges.
+- **Pure constraints — constraints as data, not code.** No hardcoded permission
+  logic anywhere; every constraint is a relationship tuple evaluated by OpenFGA.
+  This *is* "policy is externalized" (§6) and the constraint face of structure
+  (§7): the box graph carries both the work and the rules over it.
+- **Constraints stay resolvable.** Because a permission is just a typed edge, an
+  authorization decision participates in node/box resolution — an unauthorized or
+  dangling permission edge is an explicit failure (§7.5), not a silent allow.
+- **Open agents.** Interop via open agent protocols (A2A, ACP, ANP, MCP) and W3C
+  DID/VC: an agent presents verifiable relationships; OpenFGA enforces them
+  uniformly across the federation (§3.7), no central policy owner (§3.4).
+
 ## CSA framework alignment
 
 The fabric's controls are intended to align with Cloud Security Alliance guidance:
