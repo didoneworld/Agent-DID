@@ -115,6 +115,15 @@ on the right to reason (§3.5) holding across the whole federation. An agent joi
 the Internet of Agents by *adopting the constitution*, not by registering with a
 central authority.
 
+3.7.4. **The internet is a network of boxes; the Internet of Agents is a fabric
+of agents.** The classical internet is a *network* — it connects **boxes**:
+hosts and the containers of real and digital things (§8.4) addressable across it.
+The Internet of Agents is a *fabric* woven over that network — the **agents are
+the threads**, the boxes are what they exchange and act upon, and the
+constitution is the weave that gives the whole cloth shared meaning. A network
+*connects* boxes; a fabric *weaves* agents. The fabric of work (§5) is, at
+internet scale, this **fabric of agents.**
+
 ---
 
 ## 4. Work is Constructed (Not Constituted)
