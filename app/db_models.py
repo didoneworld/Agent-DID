@@ -353,10 +353,9 @@ class BlueprintInheritablePermission(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    permission_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    display_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    scope: Mapped[str] = mapped_column(String(64), nullable=False)
-    inheritable: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    resource_app_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    scopes_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    app_roles_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
