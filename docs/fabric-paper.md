@@ -43,6 +43,27 @@ model (§3). (3) Reproducible benchmarks for scale, retrieval (RAG/memory/trust)
 and agent scoring (§4). (4) A substrate evaluation (§5) and use-case validation
 (§6).
 
+**Novelty (positioning).** To our knowledge, this is the **first published
+platform to unify an AI + DB + agent composite core** on a single self-describing,
+resolvable model — where the *same* node+box resolution validates **data** (the DB
+layer), **memory/RAG/scoring** (the AI layer), and **identity/governance/trust**
+(the agent layer) alike. Equivalently, the composite core **is an Enterprise Agent
+OS**, and this work **benchmarks the Enterprise Agent OS** end to end (resolution,
+retrieval, scoring, chaos/resilience, HTAP, and a contract-conformance *Platform
+Benchmark*). It is *enterprise* in the concrete sense that it hosts existing
+enterprise data models unchanged (Adobe XDM, Salesforce, Okta/SCIM — §6),
+maps to enterprise security/compliance frameworks (OWASP LLM Top 10, CSA AICM/STAR),
+and is multi-tenant, ACID, governable, and air-gappable. Prior
+work treats the three layers separately: temporal-knowledge-graph memory systems
+(Zep/Graphiti, Mem0g) unify **AI + DB** but carry no agent identity, governance, or
+trust scoring; identity/access systems (Okta, SCIM, OpenFGA) provide the **agent**
+layer but no AI memory/RAG; multi-model and graph databases (SurrealDB, ArangoDB,
+Neo4j) provide the **DB** layer but not the AI+agent composite; benchmark layers
+(SWE-bench, Agent-Bench) evaluate agents without providing the core itself. The
+claim is deliberately falsifiable: not that any one capability is new, but that
+their **composition into one resolvable, governable, trust-scored Agent OS core**
+has not, to our knowledge, been published. We invite counterexamples.
+
 ## 2. Model
 
 A **box** is `(id, kind, context, payload, provenance, state, realm)`. A **kind**
