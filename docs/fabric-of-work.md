@@ -222,21 +222,68 @@ collapses into a small set of kinds. Nothing in the system is outside this.
 - **Command** — the directive that triggers a step (a delegation, an
   authorization, a grant).
 - **Tool** — the instrument wielded (capabilities, APIs, MCP tools).
-- **Ingredient** — the real-world thing acted upon (the **box** and its
-  contents; data, resources).
+- **Ingredient** — the thing acted upon: the **box** and its contents. A box
+  may hold a **real-world thing** *or* **digital work** (data, concepts, code).
 - **Labour** — the effort actually spent (the agent's or human's execution;
   compute).
 
 8.3. A **plan unbuilt is nothing; a strategy unexecuted is nothing.** Direction
 and elements alike exist to **serve construction**. The real work is where the
-plan meets the real-world thing and something gets made.
+plan meets the thing and something gets made.
+
+### 8.4. Real and Digital Work are Woven
+
+8.4.1. The thing a box holds is of two kinds, and the fabric governs **both**:
+- **Real** — physical, real-world things and the work that acts on them. *Only
+  real things are governed in the real world*; what is permitted there is
+  bounded by physics, resources, and law (§7.3, real-world constraints).
+- **Digital** — data, concepts, and code, and the work that constructs them.
+
+8.4.2. **Concepts are imported into a virtual box.** Every concept the system
+reasons about is brought into a *sandbox* — a virtual box — where it is given a
+definition, a context, and constraints, and where digital work on it can be done
+safely and observably before it touches the real world.
+
+8.4.3. **Real and digital are woven together**, not separated. Real work and
+digital work are two faces of the same construction (the **hybrid** mode, §9.1):
+digital work models, plans, and governs; real work acts and produces value; and
+the fabric keeps them in correspondence so that what is true in the virtual box
+stays accountable to what is real outside it. The seam between them MUST itself
+be governed — context is enforced (§1.4) at the boundary where digital decisions
+become real-world actions.
 
 ---
 
-## 9. The Whole Edifice
+## 9. Operating Modes — How the Fabric Runs
+
+9.1. The fabric is an **operating system for work** (§5), and like any OS it MUST
+run in **multiple modes at once**. These are not optional features bolted on —
+they are the conditions under which real work (§6) is possible *at scale*. The
+fabric is, by necessity:
+
+| Mode | Meaning | Anchored in |
+|---|---|---|
+| **Multi-mode** | runs several modes of operation concurrently; never a single fixed mode | this section |
+| **Multi-tenant** | many principals / organizations share the fabric under strict isolation; no tenant observes or touches another's work | §1.4 context enforcement |
+| **Multi-threaded** | many constructions proceed concurrently; work is parallel, not serial | §4 construction |
+| **Graph / DAG-structured** | work is organized as a graph — a DAG of tasks, dependencies, and delegations; orchestration follows the graph | `design-principles.md` §4 (identity is a graph) |
+| **Hybrid** | spans human + agent, sync + async, cloud + on-prem, centralized + decentralized — no single posture is assumed | §3.4 federated |
+| **Multi-environment** | operates consistently across environments (dev / staging / prod, multiple clouds, edge) | §6.1 continuous |
+| **Stateless** | the control plane holds no sticky session state; state lives in durable stores, so any mode scales horizontally and safely | `design-principles.md` §2 |
+| **Seamless** | transitions across modes, tenants, and environments are invisible to the agent; the fabric hides the seams | §6 the five guarantees |
+
+9.2. **The constitution holds in every mode.** Modes change *how* work runs —
+never *whether* it is governed. In all modes: context is enforced (§1.4),
+constraints apply (§7), meaning stays derived and contestable (§3), and failure
+is explicit (§7.5). A mode is a way of *running* the instruction set, never a way
+of *escaping* it.
+
+---
+
+## 10. The Whole Edifice
 
 ```
-   box  ──▶  meaning defined & derived in context                 (§1–§2)
+   box (real OR digital thing)  ──▶  meaning defined & derived in context  (§1–§2)
         │
    CONSTITUTION  — keeps meaning derived, provenanced, contestable;
                    right to reason · goodwill & wisdom prevail      (§3)
@@ -245,8 +292,11 @@ plan meets the real-world thing and something gets made.
             define · do · develop · manage real-world work;
             framework provides STRUCTURE (affordance + constraint); (§5, §7)
             continuous · durable · measurable · governable · value  (§6)
+            modes: multi-tenant · multi-threaded · graph · hybrid ·
+                   multi-env · stateless · seamless                 (§9)
         │
-   CONSTRUCTION  — the real work, woven into the fabric, on the box (§4)
+   CONSTRUCTION  — the real work, woven into the fabric, on the box;
+                   real + digital work woven together               (§4, §8.4)
         │
    DIRECTION  — strategy · planning                                 (§8.1)
    ELEMENTS   — command · tool · ingredient · labour                (§8.2)
@@ -258,13 +308,13 @@ plan meets the real-world thing and something gets made.
 
 ---
 
-## 10. Binding Clause
+## 11. Binding Clause
 
-10.1. This instruction set is itself subject to the procedure it defines (§3): it
+11.1. This instruction set is itself subject to the procedure it defines (§3): it
 is **derived, not decreed**, and may be re-derived, contested with better logic,
 and amended through reasoned, federated governance.
 
-10.2. The technical principles in [`design-principles.md`](./design-principles.md)
+11.2. The technical principles in [`design-principles.md`](./design-principles.md)
 are **statutes derived under this constitution**. Where a statute and this
 document conflict in *spirit*, the conflict MUST be resolved by re-derivation
 under §3 — not by decree.
