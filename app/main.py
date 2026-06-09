@@ -106,7 +106,7 @@ def _blueprint_response(db: Session, blueprint: AgentIdentityBlueprint) -> Agent
         for item in db.query(BlueprintRequiredResourceAccess).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
     ]
     inheritable_permissions = [
-        {"permission_id": item.permission_id, "display_name": item.display_name, "scope": item.scope, "inheritable": item.inheritable}
+        {"resource_app_id": item.resource_app_id, "scopes": item.scopes_json or [], "app_roles": item.app_roles_json or []}
         for item in db.query(BlueprintInheritablePermission).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
     ]
     consent_grants = [
@@ -856,7 +856,7 @@ def create_app(
     def _get_or_create_blueprint(db: Session, organization_id: str, blueprint_id: str) -> AgentIdentityBlueprint:
         blueprint = db.scalar(select(AgentIdentityBlueprint).where(AgentIdentityBlueprint.organization_id == organization_id, AgentIdentityBlueprint.id == blueprint_id))
         if blueprint is None:
-            blueprint = AgentIdentityBlueprint(id=blueprint_id, organization_id=organization_id, metadata_json={"compatibility_profiles": ["microsoft_entra_agent_id_optional_alignment"]})
+            blueprint = AgentIdentityBlueprint(id=blueprint_id, organization_id=organization_id, blueprint_id=blueprint_id, display_name=blueprint_id, publisher="auto", metadata_json={"compatibility_profiles": ["microsoft_entra_agent_id_optional_alignment"]})
             db.add(blueprint); db.flush()
         return blueprint
 
