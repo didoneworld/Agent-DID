@@ -44,6 +44,43 @@ class Graph:
     def relate(self, src, rel, dst) -> None:
         self.edges.append((src, rel, dst))
 
+    # ---- JSON-LD: a box is linked data on the wire, a node in the store ----
+    def to_jsonld(self, box_id: str) -> dict:
+        """Serialize a box to JSON-LD (fabric-of-work.md §3, §10.4): payload
+        emitted under its context's @context; edges become predicates."""
+        b = self.boxes[box_id]
+        doc: dict = {
+            "@context": {
+                "@vocab": "https://agentdid.dev/fabric#",
+                "kind": "@type",
+                "ctx": {"@id": "context", "@type": "@id"},
+            },
+            "@id": f"box:{b.id}",
+            "@type": b.kind,
+        }
+        if b.ctx is not None:
+            doc["ctx"] = f"box:{b.ctx}"
+        doc.update(b.payload)
+        for s, rel, d in self.edges:
+            if s == b.id:
+                doc.setdefault(rel, []).append(f"box:{d}")
+        return doc
+
+    # ---- promotion: digital -> real, gated on resolve + ratify -------------
+    def promote(self, box_id: str, ratified: bool) -> Box:
+        """Promote a box from digital sandbox to real (§8.4.3). Refused unless
+        the whole graph resolves (real + stable) AND the box is ratified (§3.3).
+        Failure is explicit (§7.5)."""
+        r = self.resolve()
+        if not r["valid"]:
+            raise ValueError("promotion refused: graph does not resolve "
+                             "(not real + stable)")
+        if not ratified:
+            raise ValueError(f"promotion refused: {box_id} not ratified (§3.3)")
+        b = self.boxes[box_id]
+        b.payload = {**b.payload, "realm": "real", "state": "stable"}
+        return b
+
     # ---- resolution --------------------------------------------------------
     def resolve(self) -> dict:
         B = self.boxes
@@ -199,6 +236,21 @@ def main() -> int:
     print("  the model is in the graph, and the graph (incl. its model) resolves"
           if ok else "  the model/graph does NOT resolve")
     print("=" * 66)
+
+    # ---- JSON-LD: a box is linked data on the wire ----------------------
+    print("\nJSON-LD (box:c1 — a construction, linked data on the wire):")
+    import json as _json
+    print(_json.dumps(g.to_jsonld("work:c1"), indent=2))
+
+    # ---- promotion: digital -> real, gated on resolve + ratify ----------
+    print("\nPromotion (digital -> real; batch or real-time, §8.4.3):")
+    try:
+        g.promote("ing:box-42", ratified=False)
+    except ValueError as e:
+        print(f"  unratified -> {e}")
+    b = g.promote("ing:box-42", ratified=True)
+    print(f"  ratified   -> box:ing:box-42 realm={b.payload['realm']} "
+          f"state={b.payload['state']}  (now real)")
     return 0 if ok else 1
 
 
