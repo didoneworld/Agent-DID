@@ -131,6 +131,15 @@ fabric of agents. The unit that flows is no longer the page or the file but the
 **work itself**: boxes, commands, derivations, and their provenance, all carrying
 their context (§1.4) and governed end to end (§6).
 
+3.7.6. **Anybody can participate.** The Internet of Agents is open: any human or
+agent may join, build, propose meaning, and do work — bounded by the
+**constitution, not by gatekeepers**. There is no central authority that grants
+permission to participate (§3.4); participation is by **adopting the
+constitution** (§3.7.3), which means accepting provenance (§3.1), constraints
+(§7), and the right to reason (§3.5). Openness and governance are not in tension:
+*anybody can participate, and everybody is accountable to the same constitution.*
+Permissionless to enter, principled to remain.
+
 ---
 
 ## 4. Work is Constructed (Not Constituted)
