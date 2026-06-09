@@ -96,6 +96,25 @@ worst — capture, imposition, unreasoned power. But procedure only sets a floor
 In the end, sound process exists **so that goodwill and wisdom may prevail**. No
 procedure fully specifies good work; it takes judgment.
 
+### 3.7. The Internet of Agents
+
+3.7.1. At scale, federation **is the Internet of Agents.** The internet is
+reconceived not as a network of hosts but as a **federation of agents** — humans
+and autonomous agents that derive shared meaning, exchange work, and govern it
+together under this constitution.
+
+3.7.2. The **Internet of Agents protocol** is the wire form of this constitution:
+how agents discover one another, present provenance (§3.1), propose and ratify
+meaning (§3.2–§3.3), exchange boxes — commands, tools, ingredients (§8) — and
+enforce context (§1.4) across trust boundaries. In Agent DID this is realized
+through DID-based identity and agent-to-agent protocols (e.g. A2A, ACP, ANP).
+
+3.7.3. No agent owns the Internet of Agents (§3.4): it is **federated, not
+captured.** Interoperability rests on shared, derived meaning (schemas, §7.6) and
+on the right to reason (§3.5) holding across the whole federation. An agent joins
+the Internet of Agents by *adopting the constitution*, not by registering with a
+central authority.
+
 ---
 
 ## 4. Work is Constructed (Not Constituted)
@@ -335,6 +354,28 @@ never *whether* it is governed. In all modes: context is enforced (§1.4),
 constraints apply (§7), meaning stays derived and contestable (§3), and failure
 is explicit (§7.5). A mode is a way of *running* the instruction set, never a way
 of *escaping* it.
+
+### 9.3. Runtime Substrate — the Full Compute Spectrum
+
+9.3.1. As an OS for work, the fabric MUST run across the **full compute
+spectrum**, presenting one stable behavior at every point:
+
+| Substrate | Role |
+|---|---|
+| **Realtime kernel** | a native, low-latency core for time-critical work |
+| **Native runtime / core** | runs directly on the host, closest to the metal |
+| **Container** | packaged, portable, isolated units of work |
+| **Edge** | close to where the real-world things are (§8.4) |
+| **Cloud** | elastic, centralized scale |
+
+9.3.2. **Stable state across the spectrum.** The fabric holds the *same*
+instruction set, the *same* governance, and the *same* enforced context (§1.4)
+whether it runs at the kernel, in a container, at the edge, or in the cloud. This
+is the substrate dimension of the **multi-environment** and **hybrid** modes
+(§9.1): *framework is the fabric of work* — the structure stays constant; only
+the substrate changes. Work may move along the spectrum (e.g., from cloud
+planning to edge execution) without losing its meaning, provenance, or
+constraints.
 
 ---
 
