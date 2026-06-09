@@ -226,7 +226,70 @@ minimal-attack-surface model.
 
 ---
 
-## 6. Mapping Summary
+## 6. The Model is the Graph — the Smallest, Stable-State Model
+
+Implemented and validated in `scripts/fabric_model.py`.
+
+6.1. **The model is not above the graph; it is in the graph.** The metamodel —
+the kinds, the relations, even `schema` — are **boxes**, typed by boxes, related
+by boxes. The type chain terminates in a **self-typed fixpoint**: *a `kind` is a
+`kind`*. There is nothing privileged outside the graph; the graph describes
+itself (cf. §7.6.3 "a schema is itself a box").
+
+6.2. **A box is data and meaning.** Each box carries *data* (payload) and
+*meaning* (its kind + context). Data-in-context (§10) **is** the box; the model is
+just more boxes. There is no second substance.
+
+6.3. **This is the smallest model.** One node type (box), one edge notion
+(relation — itself a box), one fixpoint (`kind:kind`). Commands, tools, agents,
+schemas, contexts, and the model itself are all expressed in this single kernel.
+Nothing smaller can still **describe itself and resolve**.
+
+6.4. **Infinitely scalable.** With exactly one uniform type and one uniform edge,
+the graph shards without special cases (§5.1): every shard is the same kernel;
+federation composes kernels with no new machinery. **The model is constant as the
+data grows** — minimal model, unbounded graph.
+
+6.5. **Minimal attack surface.** One box type and one edge type mean one tiny,
+uniform API to defend (§5.2). There is no out-of-band schema engine to subvert,
+because the schema is *in* the graph and resolves like everything else.
+
+6.6. **Maximize value, stabilize state.** Value is maximized by *placement* — the
+context a box is linked into (§10.5) — and state is stabilized by keeping every
+box resolved (§10.6). The model is "found" when it reaches its **stable state**:
+the fixpoint where the graph, *including its own model*, resolves at **node (real)
+and box (stable)**.
+
+6.7. **The model must resolve — and at the stable state, it does.** Validated
+result: 26 boxes (13 kinds, 7 relations, 6 data), every box typed by a box, every
+edge related by a box, `kind:kind` fixpoint true, **NODE real (0 dangling), BOX
+stable (0 unstable, 0 unreachable) → VALID**.
+
+> The smallest model that can describe itself, resolve at node and box, scale
+> without limit, and present the smallest attack surface is: **one box, typed by a
+> box, related by a box, bottoming out in a box that is its own type.** That is the
+> stable state.
+
+6.8. **Polyglot: one kernel, many paradigms.** The kernel has four primitives —
+**box**, **kind**, **relation**, **context** — and each is just the familiar idea
+from every modeling language under a different name. This is why the model is
+**polyglot**: the same graph renders natively into OOP, property graphs, RDF,
+relational, and document stores without translation loss.
+
+| Kernel primitive | OOP | Property graph | RDF / triples | Relational | Document |
+|---|---|---|---|---|---|
+| **box** (node) | object / instance | node | subject / resource | row | document |
+| **kind** | **class** | label | `rdfs:Class` | table | type |
+| **relation** | association / reference | edge | predicate | foreign key | embedded link |
+| **context** | **group** / scope | named graph | named graph | schema / tenant | collection |
+
+Because the kernel *is* these ideas, the fabric speaks every dialect: a box is an
+object to an app, a node to a graph engine, a triple to a reasoner, a row to SQL,
+a document to a store — **one stable-state model, many tongues.**
+
+---
+
+## 7. Mapping Summary
 
 ```
 constitution (fabric-of-work.md)        substrate (this doc / SurrealDB)
