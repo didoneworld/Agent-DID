@@ -35,14 +35,27 @@ class Graph:
     def __init__(self) -> None:
         self.boxes: dict[str, Box] = {}
         self.edges: list[tuple[str, str, str]] = []  # (src, rel_id, dst)
+        self._subs: list[tuple] = []  # (predicate, callback) — real-time streams
 
     def box(self, id, kind, ctx=None, payload=None, meta=False) -> Box:
         b = Box(id, kind, ctx, payload or {}, meta)
         self.boxes[id] = b
+        self._emit("create", b)
         return b
 
     def relate(self, src, rel, dst) -> None:
         self.edges.append((src, rel, dst))
+
+    # ---- real-time box streaming (live query / change feed, §6.1) ----------
+    def subscribe(self, predicate, callback) -> None:
+        """Register a live consumer; callback(op, box) fires as boxes stream in.
+        SurrealDB equivalent: LIVE SELECT * FROM box WHERE <predicate>."""
+        self._subs.append((predicate, callback))
+
+    def _emit(self, op: str, b: Box) -> None:
+        for predicate, callback in self._subs:
+            if predicate(b):
+                callback(op, b)
 
     # ---- JSON-LD: a box is linked data on the wire, a node in the store ----
     def to_jsonld(self, box_id: str) -> dict:
@@ -79,6 +92,7 @@ class Graph:
             raise ValueError(f"promotion refused: {box_id} not ratified (§3.3)")
         b = self.boxes[box_id]
         b.payload = {**b.payload, "realm": "real", "state": "stable"}
+        self._emit("update", b)
         return b
 
     # ---- resolution --------------------------------------------------------
@@ -251,6 +265,24 @@ def main() -> int:
     b = g.promote("ing:box-42", ratified=True)
     print(f"  ratified   -> box:ing:box-42 realm={b.payload['realm']} "
           f"state={b.payload['state']}  (now real)")
+
+    # ---- real-time box streaming ----------------------------------------
+    print("\nReal-time box streaming (LIVE SELECT, ctx=onboarding, "
+          "kind in {command,ingredient}):")
+    wanted = {"command", "ingredient"}
+    g.subscribe(
+        lambda bx: bx.kind in wanted and bx.ctx == "ctx:onboarding",
+        lambda op, bx: print(f"  stream <- [{op}] box:{bx.id} "
+                             f"kind={bx.kind} payload={bx.payload}"),
+    )
+    # new work arrives -> consumers receive it live, in order
+    g.box("cmd:rotate", kind="command", ctx="ctx:onboarding",
+          payload={"action": "rotate-keys"})
+    g.box("ing:token", kind="ingredient", ctx="ctx:onboarding",
+          payload={"realm": "digital", "value": 7})
+    g.box("tool:audit", kind="tool", ctx="ctx:onboarding",
+          payload={"api": "audit"})  # filtered out (kind=tool)
+    g.promote("ing:token", ratified=True)  # update streams too
     return 0 if ok else 1
 
 

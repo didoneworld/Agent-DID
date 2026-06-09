@@ -15,6 +15,7 @@ This is the constitution's **experimentation environment** (sandbox / virtual bo
 | `schema.surql` | backend schema — `box` (SCHEMAFULL envelope + FLEXIBLE payload), `context`, RELATION edge tables |
 | `seed.surql` | the stable-state kernel (the model is the graph) + a sample construction |
 | `resolve.surql` | in-database validation: node → real, box → stable |
+| `live.surql` | real-time box streaming — `LIVE SELECT` / change feeds (§6.1) |
 | `run_backend.py` | provisions SurrealDB (Docker → local binary → reference fallback), loads, resolves |
 | `test_backend.py` | testcontainer-style test (skips without Docker) + always-on reference test |
 
