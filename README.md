@@ -247,6 +247,14 @@ Create a local environment file from the template:
 cp .env.example .env
 ```
 
+## Production deployment
+
+To run the control plane on a server behind HTTPS on your own domain (app +
+Postgres + Caddy auto-TLS), see [`docs/deployment.md`](docs/deployment.md) and the
+production stack in [`deploy/docker-compose.prod.yml`](deploy/docker-compose.prod.yml).
+The domain's `A` record points straight at the host and the app is served
+directly — no third-party redirect.
+
 ## Agent Identity Blueprint Alignment
 
 Agent DID supports a vendor-neutral **Agent Identity Blueprint** model inspired by Microsoft Entra Agent ID blueprints. A blueprint is a reusable template and policy container for many DID-backed child agent identities.

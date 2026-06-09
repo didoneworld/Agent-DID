@@ -1,0 +1,25 @@
+# Caddy reverse proxy for the Agent-DID control plane.
+#
+# Caddy obtains and renews a Let's Encrypt certificate for ${DOMAIN}
+# automatically, as long as the domain's A record points at this server
+# and ports 80 + 443 are reachable from the internet.
+
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Health endpoint kept fast and uncached.
+	handle /health {
+		reverse_proxy app:8000
+	}
+
+	handle {
+		reverse_proxy app:8000 {
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-Host {host}
+		}
+	}
+}

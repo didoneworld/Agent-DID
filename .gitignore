@@ -6,3 +6,5 @@ data/
 .venv/
 venv/
 *.db
+deploy/.env.prod
+.env.prod

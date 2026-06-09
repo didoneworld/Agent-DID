@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent ID Control Plane — Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body class="console">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="/">
+          <span class="brand-mark">ID</span>
+          <span class="brand-text">Agent<span class="brand-dim">DID</span></span>
+        </a>
+        <div>
+          <p class="eyebrow">Admin console</p>
+          <p class="lede">Tenant-scoped registry, audit visibility, and lifecycle operations for Agent&nbsp;ID records.</p>
+        </div>
+        <div class="session-card">
+          <div class="session-row">
+            <span>Status</span>
+            <strong id="session-status">Not connected</strong>
+          </div>
+          <div class="session-row">
+            <span>API Key</span>
+            <code id="session-key">unset</code>
+          </div>
+          <button id="clear-session" class="ghost">Clear session</button>
+        </div>
+        <nav class="side-links">
+          <a href="/">← Back to site</a>
+          <a href="/docs">API reference</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section class="hero console-hero">
+          <div>
+            <p class="eyebrow">Enterprise SaaS</p>
+            <h2>Control plane</h2>
+          </div>
+          <div class="hero-actions">
+            <button id="refresh-all">Refresh data</button>
+          </div>
+        </section>
+
+        <section class="panel-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Bootstrap organization</h3>
+              <p>Create the first tenant and admin API key.</p>
+            </div>
+            <form id="bootstrap-form" class="stack">
+              <input name="organization_name" placeholder="Organization name" value="Didone World" />
+              <input name="organization_slug" placeholder="organization-slug" value="didoneworld" />
+              <input name="api_key_label" placeholder="API key label" value="ops-admin" />
+              <button type="submit">Bootstrap tenant</button>
+            </form>
+            <pre id="bootstrap-result" class="result"></pre>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Connect session</h3>
+              <p>Paste an API key to unlock tenant data.</p>
+            </div>
+            <form id="session-form" class="stack">
+              <textarea name="api_key" rows="4" placeholder="aidp_..."></textarea>
+              <button type="submit">Save API key</button>
+            </form>
+            <pre id="session-result" class="result"></pre>
+          </section>
+        </section>
+
+        <section class="panel-grid wide">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Agent records</h3>
+              <p>Current tenant registry state.</p>
+            </div>
+            <div id="records-empty" class="empty">No records loaded yet.</div>
+            <div id="records-list" class="record-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Create or update record</h3>
+              <p>Submit the raw Agent ID protocol payload.</p>
+            </div>
+            <form id="record-form" class="stack">
+              <textarea name="record_json" rows="18"></textarea>
+              <button type="submit">Upsert record</button>
+            </form>
+            <pre id="record-result" class="result"></pre>
+          </section>
+        </section>
+
+        <section class="panel-grid wide" id="lifecycle-dashboard">
+          <section class="panel highlight">
+            <div class="panel-head">
+              <h3>Lifecycle dashboard</h3>
+              <p>Agent &amp; blueprint lifecycle detail, pending reviews, renewal queue, credential rotation queue, deprovisioning jobs, quarantine queue, and risk findings.</p>
+            </div>
+            <div class="mini-grid lifecycle-nav">
+              <button data-lifecycle-page="agent-detail">Agent lifecycle detail</button>
+              <button data-lifecycle-page="blueprint-detail">Blueprint lifecycle detail</button>
+              <button data-lifecycle-page="pending-reviews">Pending reviews</button>
+              <button data-lifecycle-page="renewal-queue">Renewal queue</button>
+              <button data-lifecycle-page="credential-rotation">Credential rotation queue</button>
+              <button data-lifecycle-page="deprovisioning-jobs">Deprovisioning jobs</button>
+              <button data-lifecycle-page="quarantine-queue">Quarantine queue</button>
+              <button data-lifecycle-page="risk-findings">Risk findings</button>
+              <button data-lifecycle-page="audit-timeline">Audit timeline</button>
+              <button data-lifecycle-page="policy-configuration">Policy configuration</button>
+              <button data-lifecycle-page="webhook-delivery-logs">Webhook delivery logs</button>
+            </div>
+            <div id="lifecycle-summary" class="audit-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Lifecycle policy configuration</h3>
+              <p>Safe defaults: approvals, sponsor/owner requirements, credential rotation, renewal, and auto-quarantine controls.</p>
+            </div>
+            <pre class="result">max_agent_lifetime_days: 365
+inactivity_suspend_days: 90
+credential_rotation_days: 90
+renewal_window_days: 30
+approval_required: true
+two_person_approval_required: false
+sponsor_required: true
+owner_required: true
+production_hardening_required: true</pre>
+          </section>
+        </section>
+
+        <section class="panel-grid wide">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Blueprints</h3>
+              <p>Reusable agent identity templates for this tenant.</p>
+            </div>
+            <div id="blueprints-empty" class="empty">No blueprints created yet.</div>
+            <div id="blueprints-list" class="record-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Create blueprint</h3>
+              <p>Submit a blueprint definition payload.</p>
+            </div>
+            <form id="blueprint-form" class="stack">
+              <textarea name="blueprint_json" rows="18"></textarea>
+              <button type="submit">Create blueprint</button>
+            </form>
+            <pre id="blueprint-result" class="result"></pre>
+          </section>
+        </section>
+
+        <section class="panel-grid">
+          <section class="panel highlight">
+            <div class="panel-head">
+              <h3>Identity providers</h3>
+              <p>Configured OIDC/SAML providers for this tenant.</p>
+            </div>
+            <div id="idp-empty" class="empty">No identity providers configured.</div>
+            <div id="idp-list" class="mini-list"></div>
+          </section>
+
+          <section class="panel highlight">
+            <div class="panel-head">
+              <h3>FGA tuples</h3>
+              <p>Record-level authorization tuples.</p>
+            </div>
+            <div id="fga-empty" class="empty">No tuples found.</div>
+            <div id="fga-list" class="mini-list"></div>
+          </section>
+        </section>
+
+        <section class="panel-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Tenant snapshot</h3>
+              <p>Organizations and API key inventory.</p>
+            </div>
+            <div class="mini-grid">
+              <div>
+                <h4>Organizations</h4>
+                <div id="organizations-list" class="mini-list"></div>
+              </div>
+              <div>
+                <h4>API keys</h4>
+                <div id="api-keys-list" class="mini-list"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Audit events</h3>
+              <p>Lifecycle and registry actions.</p>
+            </div>
+            <div id="audit-list" class="audit-list"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

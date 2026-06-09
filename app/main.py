@@ -284,6 +284,10 @@ def create_app(
     def ui() -> FileResponse:
         return FileResponse(static_dir / "index.html")
 
+    @app.get("/console", include_in_schema=False)
+    def console() -> FileResponse:
+        return FileResponse(static_dir / "console.html")
+
     @app.post("/v1/bootstrap", response_model=BootstrapResponse, status_code=201)
     def bootstrap(payload: OrganizationBootstrapRequest, db: Annotated[Session, Depends(get_db)]):
         try:
