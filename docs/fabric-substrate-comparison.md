@@ -125,6 +125,34 @@ attack surface** (§5.2):
 This is the **agent-clear** profile: a self-contained agent whose memory is
 local, trusted, real-time, and resolvable — drift-resistant by construction.
 
+## Security risk vs blockchain / The Graph
+
+A different trust model is worth contrasting: **blockchain** (global consensus +
+immutability) and **The Graph** (decentralized indexing of on-chain data via
+subgraphs). The fabric uses **federated provenance + ratification + resolution**
+instead of a global ledger.
+
+| Security axis | **Fabric** | **Blockchain** | **The Graph** |
+|---|---|---|---|
+| Trust model | federated provenance + ratify + resolve (§3) | global consensus / immutability | decentralized indexers + staking/curation |
+| Attack surface | minimal: one box type, context-enforced, air-gappable | smart-contract bugs, 51%/MEV, bridge hacks | indexer/curation economics + underlying chain |
+| Privacy | context-enforced; air-gapped possible (§9) | **public by default** (bad for private agent work) | public (indexes public chains) |
+| Latency / cost | real-time, cheap | slow finality, gas cost | query latency + chain finality |
+| Tamper-evidence | provenance + change feeds (tamper-evident) | **strong** (global immutable ledger) | inherits chain |
+| Governance | **reasoned, contestable, re-derivable** (§3.5) | code-is-law; hard to amend | token governance |
+| Data residency | local / edge / sovereign | global replication | global |
+
+**Assessment.** Blockchain buys *global trustlessness and immutability* at the cost
+of **public exposure, latency, gas, and a large smart-contract attack surface** —
+the wrong trade for private, real-time, governed agent work. The Graph's subgraph
+model is conceptually close (graph queries) but anchored to public chains. The
+fabric instead minimizes attack surface (air-gappable, one type, context-enforced)
+and makes trust **computable and contestable** rather than globally immutable —
+**lower security risk for private agentic work**, at the cost of not being
+globally trustless. Where global immutability is genuinely required, a fabric box
+can *anchor* a provenance hash on-chain without moving the data — trust without
+exposure.
+
 ---
 
 **Sources:** [SpacetimeDB key architecture](https://spacetimedb.com/docs/intro/key-architecture/),
