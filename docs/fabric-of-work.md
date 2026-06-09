@@ -404,7 +404,59 @@ constraints.
 
 ---
 
-## 10. The Whole Edifice
+## 10. Data is Primary
+
+10.1. **Hypothesis: data is intelligence; code is commodity.** Intelligence lives
+in *data* — what is known, derived, recorded, and contextualized — not in the
+code that processes it. Code is replaceable, copyable, commoditized; data is the
+irreplaceable asset. The fabric therefore optimizes for the **integrity,
+provenance, and context of data** (§3.1), and treats code as interchangeable
+machinery.
+
+10.2. **Data makes things real and tangible.** A thing becomes *real* in the
+system when it is data — recorded, addressable, provenanced. **Identity is a data
+point** (an agent is a DID-anchored record); **asset value is a data point**; a
+derivation, a box, a construction — each is data. Data is how the intangible
+(meaning, value, identity) becomes tangible, measurable, and governable (§6). Data
+carries tangible value.
+
+10.3. **Everything else is a representation of data in context.** Schemas,
+structures, boxes, slots, commands, and tools (§7, §8) are all *representations of
+data within a context*. Strip the context and you have bytes; add the context and
+you have meaning (§1). At bottom the fabric is **data plus the context that makes
+it mean something**.
+
+10.4. **The same data in different contexts can be useless or invaluable.** Data
+has no intrinsic value, just as meaning is never intrinsic (§1.1). The *same*
+datum — a number, a key, a record — may be worthless in one context and decisive
+in another. Value, like meaning, is **derived in context** (§2). The fabric
+therefore governs not data alone but **data-in-context**: it binds every datum to
+the context that gives it value, enforces that context (§1.4), and carries the
+context with the data wherever it flows (§3.7.5). *Context is what converts data
+into intelligence, value, and real work.*
+
+10.5. **Design objective: maximize value at every touch point.** Because value is
+data-in-context (§10.4), and the fabric governs *where data meets context* — every
+slot filled (§7.7), every construction (§4), every exchange across the Internet of
+Agents (§3.7) — the system's objective is to **place each datum in the context
+that maximizes its value at every touch point.** A *touch point* is any point
+where data, context, and an agent meet. The fabric is well-designed to the degree
+that no touch point leaves value unrealized: data is moved to where it is most
+useful, contextualized so it is never useless (§10.4), and governed so its value
+is real (§6) rather than merely claimed.
+
+10.6. **...and stabilize at every touch point.** Maximizing value is not enough if
+it is fragile. At each touch point the fabric must also **stabilize**: every box
+placed must *resolve* — filled, placed in a valid context-slot, with all its
+references resolving — and the surrounding graph must resolve at node and box. This
+is the same criterion by which the system is judged **valid (real) and stable**:
+*node → real, box → stable.* Value that does not stabilize is not yet real (§6.2,
+durable). The twin objective is therefore to **maximize value and stabilize at
+every touch point** — never one without the other.
+
+---
+
+## 11. The Whole Edifice
 
 ```
    box (real OR digital thing)  ──▶  meaning defined & derived in context  (§1–§2)
@@ -432,13 +484,13 @@ constraints.
 
 ---
 
-## 11. Binding Clause
+## 12. Binding Clause
 
-11.1. This instruction set is itself subject to the procedure it defines (§3): it
+12.1. This instruction set is itself subject to the procedure it defines (§3): it
 is **derived, not decreed**, and may be re-derived, contested with better logic,
 and amended through reasoned, federated governance.
 
-11.2. The technical principles in [`design-principles.md`](./design-principles.md)
+12.2. The technical principles in [`design-principles.md`](./design-principles.md)
 are **statutes derived under this constitution**. Where a statute and this
 document conflict in *spirit*, the conflict MUST be resolved by re-derivation
 under §3 — not by decree.
