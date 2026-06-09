@@ -1,7 +1,11 @@
 # The Fabric of Work: A Self-Describing, Resolvable Graph Substrate for Governed Agentic Work
 
 **Status:** Working paper / preprint draft. Reproducible; derived and contestable
-(`fabric-of-work.md` §12).
+(`fabric-of-work.md` §12). All result numbers regenerate via
+`bash scripts/run_benchmarks.sh`; full results in `docs/BENCHMARKS.md`.
+Companion analyses: `fabric-substrate-comparison.md` (substrates + blockchain),
+`fabric-security.md` (OWASP/CSA), `fabric-bleeding-edge.md` (temporal KGs),
+`fabric-swot.md` (SWOT + cost + chaos).
 
 ## Abstract
 
