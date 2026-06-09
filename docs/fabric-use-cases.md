@@ -82,6 +82,25 @@ axes and ranked side by side:
 *Validation:* a neutral, cross-framework benchmark — because the unit of
 measurement is the box graph every framework writes into, not the framework.
 
+## 7. Financial transactions, HTAP & fraud detection ✅
+
+Transactions are boxes (`kind:transaction`) linking account boxes. The same graph
+serves **both** workloads (HTAP) and fraud detection combines every fabric
+strength at once.
+
+- **Transactional + analytical (HTAP)** — `scripts/fabric_htap.py`: OLTP point
+  read/update at **~1.8M ops/s** and OLAP full-scan rollups (value/ctx, cost/kind,
+  count/state) at **~2.9M rows/s** over one box graph. Backend: HTAP
+  (SingleStore/OceanBase) or OLTP+OLAP split via change feed.
+- **Fraud detection** — `scripts/fabric_fraud.py` flags fraud with:
+  **graph rings** (money-laundering cycles in the account graph), **temporal
+  velocity** (too many tx in a window), **trust** (untrusted/unresolved source,
+  §3.1), and **amount analytics** (anomaly vs typical) — scored in real time as
+  transactions stream (§6.1). Injected laundering ring + velocity burst + amount
+  anomaly + untrusted source are **all caught**.
+- *Validation:* financial integrity = graph resolution + analytics + trust on one
+  model; fraud is "a transaction whose neighborhood doesn't resolve cleanly."
+
 ## Why one model suffices
 
 | Use case | kinds used | mode/property it leans on |
