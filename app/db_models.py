@@ -298,19 +298,19 @@ class BlueprintOwner(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    owner_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    owner_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject_type: Mapped[str] = mapped_column(String(32), nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
 class BlueprintSponsor(Base):
     __tablename__ = "blueprint_sponsors"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    sponsor_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    sponsor_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject_type: Mapped[str] = mapped_column(String(32), nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
