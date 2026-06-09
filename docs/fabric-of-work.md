@@ -124,6 +124,13 @@ constitution is the weave that gives the whole cloth shared meaning. A network
 *connects* boxes; a fabric *weaves* agents. The fabric of work (§5) is, at
 internet scale, this **fabric of agents.**
 
+3.7.5. **The internet is a network for work.** Where the classical internet moved
+*documents and packets*, the Internet of Agents makes it a **network for work** —
+the medium over which work is *defined, done, developed, and managed* (§5) by the
+fabric of agents. The unit that flows is no longer the page or the file but the
+**work itself**: boxes, commands, derivations, and their provenance, all carrying
+their context (§1.4) and governed end to end (§6).
+
 ---
 
 ## 4. Work is Constructed (Not Constituted)
