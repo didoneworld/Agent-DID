@@ -207,6 +207,38 @@ includes the **right to refuse**, and a reasoned veto *is* a constraint.
 receives a deterministic, reasoned "no" — never a silent drift. (Cf.
 `design-principles.md` §13, Failure is Explicit.)
 
+### 7.6. Schema — Where Structure Becomes Executable
+
+7.6.1. A **schema** is the concrete artifact in which the framework's structure,
+the defined meaning, and the constraints all converge and become
+**machine-enforceable**. A schema does four things at once:
+- **Defines** — specifies the meaning precisely (§2.1).
+- **Structures** — fixes the shape, the fields, and the relations (§7.1).
+- **Constrains** — rejects forms that are not permitted or possible (§7.2).
+- **Enforces context** — validation is the point at which context becomes a
+  hard boundary (§1.4); an instance that does not match its schema-in-context is
+  refused.
+
+7.6.2. Schema is how *"the fabric is structured"* stops being an aspiration and
+becomes executable: the structure is not merely described, it is **declared in a
+schema and enforced by validation**. In Agent DID this is realized as JSON
+Schema, the Agent ID record format, and JSON-LD `@context` — the shared,
+federated schemas through which parties agree on what terms mean (§3).
+
+7.6.3. A schema is itself **derived, not decreed** (§2, §3): it is a ratified
+derivation of meaning, carries provenance, is versioned, and may be re-derived
+and contested. A schema is the constitution made checkable.
+
+7.6.4. **Schemaless is acceptable; structureless is not.** Structure (§7) is the
+*invariant*; a fixed, predeclared schema is one powerful way to express it, but
+not the only one. A system may be **schemaless** — structure carried implicitly,
+late-bound, derived on read, or graph-shaped (§9, graph/DAG mode) — and remain
+fully governable, so long as its structure is present and discoverable.
+**Structureless**, by contrast, is forbidden: work or data with no shape, no
+relations, and no constraints cannot be defined, enforced, governed, or reasoned
+about. Just as the fabric is *seamless but not structureless* (§9.1), it may be
+*schemaless but never structureless*.
+
 ---
 
 ## 8. The Elements of Work
@@ -270,7 +302,7 @@ fabric is, by necessity:
 | **Hybrid** | spans human + agent, sync + async, cloud + on-prem, centralized + decentralized — no single posture is assumed | §3.4 federated |
 | **Multi-environment** | operates consistently across environments (dev / staging / prod, multiple clouds, edge) | §6.1 continuous |
 | **Stateless** | the control plane holds no sticky session state; state lives in durable stores, so any mode scales horizontally and safely | `design-principles.md` §2 |
-| **Seamless** | transitions across modes, tenants, and environments are invisible to the agent; the fabric hides the seams | §6 the five guarantees |
+| **Seamless** | transitions across modes, tenants, and environments are invisible to the agent; the fabric hides the seams — but **seamless is not structureless**: it hides the *seams*, never the *structure* (§7) | §6 the five guarantees |
 
 9.2. **The constitution holds in every mode.** Modes change *how* work runs —
 never *whether* it is governed. In all modes: context is enforced (§1.4),
