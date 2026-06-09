@@ -21,11 +21,7 @@ Drop into app/auth/ and wire the router in app/main.py:
 
 from __future__ import annotations
 
-import base64
-import time
 from typing import Any
-from urllib.parse import urlencode
-from xml.etree import ElementTree as ET
 
 import httpx
 from fastapi import HTTPException, status

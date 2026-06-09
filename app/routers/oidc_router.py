@@ -21,9 +21,8 @@ from __future__ import annotations
 import os
 import time
 import uuid
-from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.auth.oidc import (

@@ -4,14 +4,14 @@ import hashlib
 import hmac
 import json
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.db_models import AgentRecord, LifecycleAuditEvent, LifecycleWebhookDelivery, utc_now
+from app.db_models import AgentRecord, LifecycleAuditEvent, utc_now
 
 AGENT_LIFECYCLE_STATES = {
     "draft", "pending_review", "approved", "active", "suspended", "quarantined",

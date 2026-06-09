@@ -17,16 +17,14 @@ Wire in app/main.py:
 from __future__ import annotations
 
 import os
-import secrets
 import time
 import uuid
 
-from fastapi import APIRouter, Form, HTTPException, Query, Request, status
+from fastapi import APIRouter, Form, HTTPException, Query, status
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 
 from app.auth.saml import (
     build_authn_request_url,
-    build_logout_request_url,
     build_sp_metadata,
     ingest_idp_metadata,
     process_logout_response,

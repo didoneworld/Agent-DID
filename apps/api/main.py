@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 import uuid
 
 from .graph import IdentityGraph

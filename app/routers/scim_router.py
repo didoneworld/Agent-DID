@@ -24,13 +24,12 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query, Request, status
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 
 from app.scim.schema import (
     SCIM_AGENT_SCHEMA_URN,
     AgenticIdentityCreate,
-    AgenticIdentityResponse,
     AgentStatus,
     ScimListResponse,
     ScimPatchRequest,

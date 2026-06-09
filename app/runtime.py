@@ -65,9 +65,8 @@ class RedisRateLimiter:
             # Fallback to in-memory if redis unavailable
             return RateLimitResult(allowed=True)
         
-        now = time.monotonic()
         redis_key = f"ratelimit:{key}"
-        
+
         try:
             # Atomic increment with expiry
             pipe = self._client.pipeline()

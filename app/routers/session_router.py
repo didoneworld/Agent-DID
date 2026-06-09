@@ -25,10 +25,9 @@ from __future__ import annotations
 
 import os
 import time
-import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, status
+from fastapi import APIRouter, Form, HTTPException, Query, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 

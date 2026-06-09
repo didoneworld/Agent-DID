@@ -48,9 +48,6 @@ from app.schemas import (
     BlueprintPrincipalWrite,
     BlueprintPolicyActionResponse,
     BootstrapResponse,
-    DeprovisionRequest,
-
-
     BlueprintLifecycleResponse,
     LifecycleAuditEventResponse,
     LifecycleRequest,
@@ -78,7 +75,7 @@ from app.routers.saml_router import router as saml_router
 from app.routers.session_router import router as session_router
 from app.routers.scim_router import router as scim_router
 from app.ssf.emitter import ssf_router
-from app.lifecycle import BLUEPRINT_ACTION_TARGETS, BLUEPRINT_TRANSITIONS, LifecycleRequestData, agent_lifecycle_state, set_agent_lifecycle_state, validate_transition, validation_report_for_record
+from app.lifecycle import BLUEPRINT_ACTION_TARGETS, LifecycleRequestData, agent_lifecycle_state, set_agent_lifecycle_state, validate_transition, validation_report_for_record
 from app.approval.gate import approval_router
 
 
@@ -99,18 +96,18 @@ def _record_response(record: AgentRecord) -> AgentRecordResponse:
     )
 
 def _blueprint_response(db: Session, blueprint: AgentIdentityBlueprint) -> AgentIdentityBlueprintResponse:
-    owners = [f"{o.owner_type}:{o.owner_id}" for o in db.query(BlueprintOwner).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()]
-    sponsors = [f"{s.sponsor_type}:{s.sponsor_id}" for s in db.query(BlueprintSponsor).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()]
+    owners = [o.subject for o in db.query(BlueprintOwner).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()]
+    sponsors = [s.subject for s in db.query(BlueprintSponsor).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()]
     required_resource_access = [
         {"resource_app_id": item.resource_app_id, "scopes": item.scopes_json or [], "app_roles": item.app_roles_json or []}
         for item in db.query(BlueprintRequiredResourceAccess).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
     ]
     inheritable_permissions = [
-        {"permission_id": item.permission_id, "display_name": item.display_name, "scope": item.scope, "inheritable": item.inheritable}
+        {"resource_app_id": item.resource_app_id, "scopes": item.scopes_json or [], "app_roles": item.app_roles_json or []}
         for item in db.query(BlueprintInheritablePermission).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
     ]
     consent_grants = [
-        {"resource_app_id": item.principal_id, "scopes": item.scopes_json or [], "app_roles": [], "revoked": item.revoked_at is not None}
+        {"resource_app_id": item.resource_app_id, "scopes": item.scopes_json or [], "app_roles": item.app_roles_json or [], "revoked": item.revoked}
         for item in db.query(BlueprintConsentGrant).filter_by(organization_id=blueprint.organization_id, blueprint_id=blueprint.blueprint_id).all()
     ]
     credentials = [
@@ -573,14 +570,32 @@ def create_app(
         blueprint, affected = service.set_blueprint_status(db, auth.organization_id, auth.actor_label, blueprint_id, enabled=False)
         if blueprint is None:
             raise HTTPException(status_code=404, detail="blueprint not found")
-        return BlueprintPolicyActionResponse(action="disable", blueprint_id=blueprint.blueprint_id, success=True, message=f"Disabled, affected {len(affected)} records")
+        # Cascade lifecycle suspension to every linked agent record — both those
+        # bound through the relational blueprint_id column and those linked only
+        # via the record JSON (lifecycle / extensions.lifecycle blueprint_id).
+        for record in service.list_records(db, auth.organization_id):
+            doc = record.record_json or {}
+            linked = (
+                record.blueprint_id == blueprint.blueprint_id
+                or doc.get("blueprint_id") == blueprint.id
+                or (doc.get("lifecycle") or {}).get("blueprint_id") == blueprint.id
+                or ((doc.get("extensions") or {}).get("lifecycle") or {}).get("blueprint_id") == blueprint.id
+            )
+            if linked and agent_lifecycle_state(record) != "suspended":
+                old = agent_lifecycle_state(record)
+                set_agent_lifecycle_state(record, "suspended")
+                service._lifecycle_audit(db, organization_id=auth.organization_id, event_type="agent.suspended", subject_type="agent", subject_id=record.id, actor_label=auth.actor_label, previous_state=old, new_state="suspended", request=_lifecycle_request(LifecycleRequest()), metadata={"cascade_from_blueprint": blueprint.id}, agent_record_id=record.id)
+                if record.id not in affected:
+                    affected.append(record.id)
+        db.commit()
+        return BlueprintPolicyActionResponse(action="disable", blueprint_id=blueprint.blueprint_id, success=True, message=f"Disabled, affected {len(affected)} records", affected_agent_record_ids=affected)
 
     @app.post("/v1/blueprints/{blueprint_id}/enable", response_model=BlueprintPolicyActionResponse)
     def enable_blueprint(blueprint_id: str, db: Annotated[Session, Depends(get_db)], auth=Depends(require_role("admin", "writer"))):
         blueprint, affected = service.set_blueprint_status(db, auth.organization_id, auth.actor_label, blueprint_id, enabled=True)
         if blueprint is None:
             raise HTTPException(status_code=404, detail="blueprint not found")
-        return BlueprintPolicyActionResponse(action="enable", blueprint_id=blueprint.blueprint_id, success=True, message=f"Enabled, affected {len(affected)} records")
+        return BlueprintPolicyActionResponse(action="enable", blueprint_id=blueprint.blueprint_id, success=True, message=f"Enabled, affected {len(affected)} records", affected_agent_record_ids=affected)
 
     @app.get("/v1/blueprints/{blueprint_id}/agent-records", response_model=list[AgentRecordResponse])
     def list_blueprint_agent_records(blueprint_id: str, db: Annotated[Session, Depends(get_db)], auth=Depends(require_role("admin", "writer", "reader"))):
@@ -856,12 +871,12 @@ def create_app(
     def _get_or_create_blueprint(db: Session, organization_id: str, blueprint_id: str) -> AgentIdentityBlueprint:
         blueprint = db.scalar(select(AgentIdentityBlueprint).where(AgentIdentityBlueprint.organization_id == organization_id, AgentIdentityBlueprint.id == blueprint_id))
         if blueprint is None:
-            blueprint = AgentIdentityBlueprint(id=blueprint_id, organization_id=organization_id, metadata_json={"compatibility_profiles": ["microsoft_entra_agent_id_optional_alignment"]})
+            blueprint = AgentIdentityBlueprint(id=blueprint_id, organization_id=organization_id, blueprint_id=blueprint_id, display_name=blueprint_id, publisher="", metadata_json={"compatibility_profiles": ["microsoft_entra_agent_id_optional_alignment"]})
             db.add(blueprint); db.flush()
         return blueprint
 
-    @app.get("/v1/blueprints/{blueprint_id}", response_model=BlueprintLifecycleResponse)
-    def get_blueprint(blueprint_id: str, db: Annotated[Session, Depends(get_db)], auth=Depends(require_role("admin", "writer", "reader"))):
+    @app.get("/v1/blueprints/{blueprint_id}/lifecycle", response_model=BlueprintLifecycleResponse)
+    def get_blueprint_lifecycle(blueprint_id: str, db: Annotated[Session, Depends(get_db)], auth=Depends(require_role("admin", "writer", "reader"))):
         return _make_lifecycle_response(_get_or_create_blueprint(db, auth.organization_id, blueprint_id))
 
     @app.post("/v1/blueprints/{blueprint_id}/activate", response_model=LifecycleTransitionResponse)

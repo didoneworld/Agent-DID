@@ -57,7 +57,7 @@ class TestAuditEvents:
         client.post(f"/v1/blueprints/{blueprint}/disable", headers=auth_headers)
         
         # List audit events
-        resp = client.get(f"/v1/audit-events", headers=auth_headers)
+        resp = client.get("/v1/audit-events", headers=auth_headers)
         assert resp.status_code == 200
         events = resp.json()
         assert len(events) > 0
@@ -66,8 +66,8 @@ class TestAuditEvents:
 class TestDryRun:
     def test_deprovision_endpoint_smoke(self, client, auth_headers, blueprint):
         get_resp = client.get(f"/v1/blueprints/{blueprint}", headers=auth_headers)
-        original = get_resp.json()
-        
+        assert get_resp.status_code == 200
+
         resp = client.post(f"/v1/blueprints/{blueprint}/deprovision?dry_run=true", headers=auth_headers)
         # Either succeeds or endpoint doesn't exist
         assert resp.status_code in [200, 404]

@@ -17,7 +17,6 @@ Drop this file into app/auth/ and wire the router in app/main.py:
 from __future__ import annotations
 
 import hashlib
-import hmac
 import secrets
 import time
 from typing import Any

@@ -37,7 +37,7 @@ import uuid
 from typing import Any
 
 import httpx
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException
 
 from fastapi.responses import JSONResponse, Response
 

@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import base64
 import hashlib
-import json
 import time
 import uuid
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -93,7 +92,7 @@ class TestFlowStore:
 @pytest.mark.asyncio
 class TestJWKSCache:
     async def test_jwks_cache_hit(self):
-        from app.auth.oidc import _JWKS_CACHE, get_jwks, invalidate_jwks_cache
+        from app.auth.oidc import get_jwks, invalidate_jwks_cache
 
         issuer = "https://example.com"
         invalidate_jwks_cache(issuer)

@@ -8,7 +8,6 @@ Integration tests for Agent-Auth / AuthZEN wiring across:
   4. Gate — AuthZEN pre-flight in approval flow
 """
 from __future__ import annotations
-import time
 import uuid
 from unittest.mock import AsyncMock, MagicMock, patch
 import pytest

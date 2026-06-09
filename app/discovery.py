@@ -22,7 +22,7 @@ import os
 import time
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -144,7 +144,7 @@ async def jwks() -> JSONResponse:
     try:
         from cryptography.hazmat.primitives.serialization import load_pem_public_key
         from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
-        import base64, struct
+        import base64
 
         key_obj = load_pem_public_key(public_pem.encode())
         if isinstance(key_obj, RSAPublicKey):

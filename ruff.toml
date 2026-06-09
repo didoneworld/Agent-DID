@@ -1,0 +1,22 @@
+# Ruff configuration for the Agent-DID control plane.
+#
+# The service layer is written in a deliberately compact style (multiple
+# statements per line). Those rules are disabled project-wide so the linter
+# reflects the codebase's conventions rather than fighting them. Correctness
+# rules (pyflakes "F") stay enabled.
+
+target-version = "py311"
+line-length = 240
+
+[lint]
+# E701/E702/E401: compact one-liner style used throughout the service layer.
+# E712: explicit `== True/False` comparisons are kept for readable assertions.
+ignore = ["E701", "E702", "E401", "E712"]
+
+[lint.per-file-ignores]
+# Optional-dependency availability probes import names only to detect presence.
+"app/saml.py" = ["F401"]
+"app/auth/saml.py" = ["F401"]
+# Legacy SAML routers register models after route comments by design.
+"app/saml_router.py" = ["E402"]
+"app/routers/saml_router.py" = ["E402"]

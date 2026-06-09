@@ -648,6 +648,7 @@ class SaaSService(LifecycleServiceMixin):
             scopes_json=scopes or [],
             app_roles_json=app_roles or [],
             revoked=True,
+            revoked_at=utc_now(),
         )
         db.add(grant)
         self._audit(db, organization_id=organization_id, actor_label=actor_label, action="blueprint_permission_grant_revoked", metadata={"blueprint_id": blueprint_id, "resource_app_id": resource_app_id, "scopes": scopes or [], "app_roles": app_roles or []})

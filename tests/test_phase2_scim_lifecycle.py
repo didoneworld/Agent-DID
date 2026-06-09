@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import time
 import uuid
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -344,7 +344,6 @@ class TestSSFEmitter:
 
     async def test_emit_does_not_deliver_to_wrong_event_type(self):
         from app.ssf.emitter import (
-            AGENT_DEPROVISIONED,
             CAEP_SESSION_REVOKED,
             _RECEIVERS,
             emit_agent_deprovisioned,
@@ -560,7 +559,6 @@ class TestApprovalGate:
         from app.approval.gate import (
             ApprovalDecision,
             ApprovalRequest,
-            ApprovalState,
             _APPROVAL_REQUESTS,
             create_approval_request,
             submit_approval_decision,

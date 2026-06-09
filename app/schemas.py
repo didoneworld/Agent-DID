@@ -351,6 +351,10 @@ class AgentIdentityBlueprintResponse(BaseModel):
     tags: list = Field(default_factory=list, validation_alias="tags_json")
     status: str
     extension_fields: dict = Field(default_factory=dict, validation_alias="extension_fields_json")
+    owners: list = Field(default_factory=list)
+    sponsors: list = Field(default_factory=list)
+    permissions: dict = Field(default_factory=dict)
+    credentials: list = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime = None
 
@@ -412,16 +416,15 @@ class BlueprintPolicyActionResponse(BaseModel):
     blueprint_id: str
     success: bool
     message: str
+    affected_agent_record_ids: list = Field(default_factory=list)
 
 
 class EffectivePermissionsResponse(BaseModel):
     blueprint_id: str
-    permission_id: str
-    display_name: str
-    scope: str
-    inheritable: bool
-    owner_id: str | None
-    sponsor_id: str | None
+    inherited_blueprint_grants: list = Field(default_factory=list)
+    direct_agent_grants: list = Field(default_factory=list)
+    denied_permissions: list = Field(default_factory=list)
+    effective_permissions: list = Field(default_factory=list)
 
 
 class PermissionGrant(BaseModel):

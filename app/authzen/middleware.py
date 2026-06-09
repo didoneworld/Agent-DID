@@ -17,11 +17,10 @@ Usage patterns:
    if decision.denied: raise HTTPException(403)
 """
 from __future__ import annotations
-import os
-from typing import Callable, Any
+from typing import Callable
 from fastapi import HTTPException, Request, status
 from app.authzen.pep_async import Action, AsyncPEPClient, Context, Decision, Resource, Subject
-from app.authzen.vocabulary import AgentAction, AgentContext, AgentResource
+from app.authzen.vocabulary import AgentAction, AgentContext
 
 _pep_client: AsyncPEPClient | None = None
 

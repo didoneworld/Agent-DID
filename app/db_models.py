@@ -265,52 +265,51 @@ LifecycleWebhookDelivery = _json_table("lifecycle_webhook_deliveries")
 
 class AgentDirectGrant(Base):
     __tablename__ = "agent_direct_grants"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     agent_record_id: Mapped[str] = mapped_column(ForeignKey("agent_records.id"), nullable=False, index=True)
-    grant_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    principal_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    principal_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    resource_app_id: Mapped[str] = mapped_column(String(255), nullable=False)
     scopes_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
-    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    app_roles_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    denied_json: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class BlueprintConsentGrant(Base):
     __tablename__ = "blueprint_consent_grants"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    consent_type: Mapped[str] = mapped_column(String(64), nullable=False)
-    tenant_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    principal_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    resource_app_id: Mapped[str] = mapped_column(String(255), nullable=False)
     scopes_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    app_roles_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    revoked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class BlueprintOwner(Base):
     __tablename__ = "blueprint_owners"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    owner_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    owner_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject_type: Mapped[str] = mapped_column(String(32), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
 class BlueprintSponsor(Base):
     __tablename__ = "blueprint_sponsors"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    sponsor_type: Mapped[str] = mapped_column(String(32), nullable=False)
-    sponsor_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject_type: Mapped[str] = mapped_column(String(32), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
@@ -349,14 +348,13 @@ class BlueprintRequiredResourceAccess(Base):
 
 class BlueprintInheritablePermission(Base):
     __tablename__ = "blueprint_inheritable_permissions"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
     blueprint_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    permission_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-    display_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    scope: Mapped[str] = mapped_column(String(64), nullable=False)
-    inheritable: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    resource_app_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    scopes_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    app_roles_json: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
 
