@@ -239,6 +239,32 @@ relations, and no constraints cannot be defined, enforced, governed, or reasoned
 about. Just as the fabric is *seamless but not structureless* (§9.1), it may be
 *schemaless but never structureless*.
 
+### 7.7. Structure Provides Slots; the Fabric Fills the Gaps with Boxes
+
+7.7.1. Structure is, in part, **empty by design.** It provides *slots* — defined
+places, with known shapes and relations, waiting to be filled. An empty structure
+is not idle; it is a frame of **gaps**, each gap carrying the context and
+constraints of what may occupy it.
+
+7.7.2. **The fabric fills the gaps with boxes.** A *box* — a container of a real
+or digital thing (§8.4) — is placed into a slot whose context defines what
+belongs there. Filling a slot is an act of construction (§4): the box MUST match
+the slot's schema and constraints (§7.6), or it is refused (§7.5). The fabric is
+the medium that performs this placing, and that keeps every filled slot coherent
+with every other (§5.3).
+
+7.7.3. Structure and content are therefore **inseparable**: the structure says
+*where* and *what shape*; the boxes supply *what*; the fabric performs the
+*placing*. Meaning is enforced at the slot — a box means something only in the
+context of the slot it fills (§1). An empty structure defines the space of
+possible work; the boxes are the work made actual.
+
+7.7.4. The filled slots are **durable** (§6.2): once a box is placed and ratified
+into its slot, the filling persists and survives failure. The structure together
+with its boxes is the **durable record of work** — what was placed, where, by
+whom, and on what derivation (provenance, §3.1) — which is precisely what makes
+the work measurable and governable (§6.3–§6.4) over time.
+
 ---
 
 ## 8. The Elements of Work
