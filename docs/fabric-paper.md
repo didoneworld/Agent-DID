@@ -112,12 +112,16 @@ W3C Decentralized Identifiers and Verifiable Credentials (identity as proof);
 JSON-LD (`@context`, shared meaning); property-graph and multi-model databases
 (SurrealDB); in-database compute (SpacetimeDB reducers); RDBMS (PostgreSQL);
 agent task benchmarks (SWE-bench; HF Coding Agent Leaderboard); agent frameworks
-(Anthropic Claude Agent SDK, **LangGraph / DeepAgents**, and others). LangGraph
-models an agent as a **state graph** of nodes and edges, which maps directly onto
-the box graph — a LangGraph node is a box, its transitions are relations — so such
-agents are hosted and scored natively. The fabric's novelty is the **uniform,
-self-describing, resolvable** treatment that unifies governance, retrieval, and
-trust scoring on one model.
+and harnesses (Anthropic **Claude Agent SDK** and **Claude Code**, **LangGraph /
+DeepAgents**, Nous Research **Hermes**, Alias Robotics **CAI** for security, and
+others). LangGraph models an agent as a **state graph** of nodes and edges, which
+maps directly onto the box graph — a LangGraph node is a box, its transitions are
+relations — so such agents are hosted and scored natively. The fabric is **harness-
+and model-agnostic**: any of these (open-weights like Hermes or hosted like Claude)
+emits boxes-in-context and is scored on the same Trust/Reliability/Usability/GPA
+and risk axes; open-weights models additionally enable the **air-gapped, local-LLM**
+profile. The fabric's novelty is the **uniform, self-describing, resolvable**
+treatment that unifies governance, retrieval, and trust scoring on one model.
 
 ## 8. Limitations and reproducibility
 
