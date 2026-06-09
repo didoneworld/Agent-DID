@@ -2,6 +2,13 @@
 
 This document defines the core **design principles** that govern the Agent DID system. These principles ensure the system remains cloud-native, vendor-neutral, secure, and scalable for both human and autonomous agent identity.
 
+> **Constitutional frame.** The principles below are *statutes* — concrete
+> technical commitments. They are derived under a higher-order, constitutional
+> frame: [**The Fabric of Work**](./fabric-of-work.md), which defines how
+> meaning, work, and governance are legitimately established. Where a principle
+> here and that document conflict in spirit, resolve it by re-derivation under
+> the constitution, not by decree.
+
 ---
 
 # 1. Identity is Cryptographic, Not Declarative

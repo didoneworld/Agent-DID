@@ -1,0 +1,9 @@
+[package]
+name = "fabric-core"
+version = "0.1.0"
+edition = "2021"
+description = "Enterprise Agent OS composite core — boxes-in-context that resolve at node + box."
+license = "Apache-2.0"
+
+[lib]
+path = "src/lib.rs"
