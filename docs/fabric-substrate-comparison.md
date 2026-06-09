@@ -1,10 +1,13 @@
 # Substrate Comparison — SurrealDB vs SpacetimeDB vs Postgres
 
-> **Status:** Design evaluation. Derived, contestable (`fabric-of-work.md` §12).
-> Evaluates candidate backends for the fabric against the workloads that matter
-> for an **agentic** system: RAG, AI memory, and trust — on **speed, accuracy,
-> and real-time reaction** — plus the operating-mode axes (edge, serverless,
-> hybrid cloud, streaming, ACID, multi-model).
+> **Status:** Design evaluation — a **provider benchmark**. Derived, contestable
+> (`fabric-of-work.md` §12). This is *not* a search for a vendor to depend on: the
+> **contract is ours** (`fabric-substrate.md` §1.1), and each engine is scored by
+> *how well it conforms to that contract*. Candidate backends are evaluated against
+> the workloads that matter for an **agentic** system: RAG, AI memory, and trust —
+> on **speed, accuracy, and real-time reaction** — plus the operating-mode axes
+> (edge, serverless, hybrid cloud, streaming, ACID, multi-model). The winner
+> *hosts* the contract best; none *owns* it.
 
 ## The agent workloads are one shape
 

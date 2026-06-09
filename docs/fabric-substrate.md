@@ -37,6 +37,33 @@ The decisive fit is **SCHEMAFULL + SCHEMALESS coexisting**: the fabric can be
 schemaless where flexibility is needed and schemafull where structure must be
 guaranteed — *schemaless but never structureless*, exactly §7.6.4.
 
+### 1.1. The contract is ours — SurrealDB is a *feature*, not a *provider*
+
+The architectural stance, stated plainly:
+
+- **The contract is ours.** The box model, the `@context`, the **resolution
+  invariant** (node + box → real + stable), the operating semantics, and the
+  trust/provenance rules are owned by the fabric. A substrate does **not** define
+  the contract — it **conforms** to it. This is dependency inversion: we depend on
+  our abstraction (`box` / `resolve`), never on a vendor's API.
+- **The vendor is a feature, not a provider.** SurrealDB is an open-source single
+  binary embedded **inside our boundary** (in-process, WASM, edge, air-gapped) —
+  a capability we compose, like a library; we own the data, uptime, and lifecycle.
+  A *provider* (hosted, owning, sticky — e.g. SpacetimeDB, Convex) would invert
+  that and own us. We use the store strictly as a feature.
+- **Therefore vendor-neutrality is structural, not aspirational.** Any engine that
+  satisfies the contract is interchangeable (Neo4j, ArangoDB, Postgres, SingleStore
+  …). The contract is the moat; the engine is swappable.
+- **The substrate comparison is a *provider benchmark*.** Engines are scored by
+  *how well they conform to our contract* (graph, schemaless-not-structureless,
+  live + replay, edge/embed, ACID, backend≠runtime) — not by which one we are
+  locked into. The winner **hosts** the contract best; none **owns** it. (See
+  `fabric-substrate-comparison.md`.)
+
+> Provider logic makes the vendor hold the contract and you conform. The fabric
+> holds the contract and the vendor conforms. For an identity/trust control plane,
+> *who holds the contract* is the whole game.
+
 ---
 
 ## 2. The Ideal Data Model
