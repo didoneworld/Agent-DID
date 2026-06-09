@@ -57,7 +57,29 @@ benchmarks for comparability (future work):
 | LongMemEval, LoCoMo | retrieval recall / temporal memory (`fabric_rag_bench.py` + `as_of`) |
 | AMA-Bench, MemoryAgentBench | long-horizon memory competencies |
 | SWE-bench, HF Coding Agent Leaderboard | Usability/Reliability feed into Agent GPA |
+| AGenNext **Agent-Bench** | the SWE-bench-style benchmark layer for agents (SurrealQL-backed — same substrate) — see alignment below |
 | OWASP LLM Top 10, CSA AICM/STAR | security controls (`fabric-security.md`) |
+
+## Alignment with AGenNext Agent-Bench
+
+[AGenNext/Agent-Bench](https://github.com/AGenNext/Agent-Bench) is a benchmarking
+layer for agents and agent teams (Rust + **SurrealQL** + Docker) built on the
+principle: *"benchmarks provide reproducible tasks · evaluations score the
+outcomes · bench publishes comparable results."* Because it is **SurrealQL-backed
+— the same substrate this fabric targets** — the two compose cleanly:
+
+| Agent-Bench layer | Fabric mapping |
+|---|---|
+| **reproducible task** | a `command` / `construction` box-in-context (§8) |
+| **fixtures / expected outputs** | ingredient boxes + schema (§7.6) |
+| **evaluation / scoring** | the Agent GPA / Trust / Usability / Risk scorecard (`fabric-agent-scoring.md`) |
+| **result + reproducibility manifest** | a resolved, provenance-bearing result box (§3.1) that must resolve at node+box |
+| **comparable results (versioned)** | bi-temporal + provenance (`as_of`, §3.7.5) over result boxes |
+
+So the fabric supplies the **data model + scoring + reproducible runner**;
+Agent-Bench supplies the **task suites + publishing**; together they form a full,
+SurrealDB-native agent-evaluation stack. (AGenNext/Fabric-Agent is the companion
+runtime, currently empty.)
 
 ## Reproduce
 
